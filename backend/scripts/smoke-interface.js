@@ -91,6 +91,14 @@ async function executar() {
         await pagina.waitForSelector(".profile-menu__trigger");
         conferir(await pagina.getByText("Meus pontos de coleta", { exact: true }).count(), "Sessão não foi mantida em Como Funciona");
 
+        await pagina.goto(`${site}/sobre`, { waitUntil: "domcontentloaded" });
+        const colunaTituloSobre = await pagina.locator(".about-social__heading").boundingBox();
+        const colunaTextoSobre = await pagina.locator(".about-social__content").boundingBox();
+        conferir(
+            colunaTituloSobre && colunaTextoSobre && colunaTextoSobre.x > colunaTituloSobre.x,
+            "Bloco de compromisso social não ficou dividido em duas colunas"
+        );
+
         await pagina.goto(`${site}/mapa`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector("#map");
         conferir(await pagina.locator("#mapPointsList").count(), "Lista do mapa não foi carregada");

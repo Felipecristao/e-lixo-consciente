@@ -143,7 +143,6 @@
 .about-social__card,
 .about-cta__content {
     padding: 48px;
-    display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 50px;
@@ -153,9 +152,32 @@
     box-shadow: 0 18px 50px rgba(8, 47, 34, 0.07);
 }
 
-.about-social__card > div,
+.about-social__card {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+    gap: 72px;
+}
+
+.about-cta__content {
+    display: flex;
+}
+
 .about-cta__content > div:first-child {
     max-width: 780px;
+}
+
+.about-social__heading h2 {
+    max-width: 520px;
+    margin-bottom: 0;
+}
+
+.about-social__content {
+    max-width: 720px;
+}
+
+.about-social__content .btn {
+    margin-top: 28px;
 }
 
 .about-cta {
@@ -211,6 +233,14 @@
     .about-cta__content {
         padding: 30px 24px;
         align-items: flex-start;
+    }
+
+    .about-social__card {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .about-cta__content {
         flex-direction: column;
     }
 }
