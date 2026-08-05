@@ -98,6 +98,10 @@ async function executar() {
             Math.abs(alturaHeroSobre - alturaHeroComoFunciona) <= 40,
             "Área verde da página Sobre ficou desproporcional à página Como Funciona"
         );
+        conferir(
+            await pagina.locator(".about-hero .btn--white", { hasText: "Encontrar ponto de coleta" }).count(),
+            "Botão principal da página Sobre não usa o padrão da página Como Funciona"
+        );
         const colunaTituloSobre = await pagina.locator(".about-social__heading").boundingBox();
         const colunaTextoSobre = await pagina.locator(".about-social__content").boundingBox();
         conferir(
