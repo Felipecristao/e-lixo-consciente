@@ -128,12 +128,24 @@ async function executar() {
         await pagina.goto(`${site}/login`, { waitUntil: "domcontentloaded" });
         await pagina.fill("#email", emailAdmin);
         await pagina.fill("#senha", senhaAdmin);
+        await pagina.route("**/api/admin/resumo", (rota) => rota.fulfill({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify({ pendentes: 3, aprovados: 0, rejeitados: 0, usuarios: 2 })
+        }));
         await pagina.click("#loginForm button[type='submit']");
         await pagina.waitForURL((url) => url.pathname === "/", { timeout: 15000 })
             .catch(() => {
                 throw new Error(`Login administrativo não abriu a página inicial; destino atual: ${pagina.url()}`);
             });
-        conferir(await pagina.getByText("Painel administrador", { exact: true }).count(), "Atalho administrativo não apareceu");
+        const atalhoAdmin = pagina.locator(".admin-profile-btn").filter({ hasText: "Painel administrador" }).first();
+        conferir(await atalhoAdmin.count(), "Atalho administrativo não apareceu");
+        await atalhoAdmin.locator(".admin-notification-badge").waitFor();
+        conferir(
+            await atalhoAdmin.locator(".admin-notification-badge").textContent() === "3",
+            "Contador de pendências administrativas não apareceu"
+        );
+        await pagina.unroute("**/api/admin/resumo");
 
         await pagina.goto(`${site}/painel-admin`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector("#adminPontosTabela");

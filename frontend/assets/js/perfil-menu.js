@@ -5,8 +5,79 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(
             ".header__actions, .dashboard-header__actions"
         ).forEach(configurarMenuPerfil);
+
+        configurarNotificacaoAdmin();
     }, 0);
 });
+
+async function configurarNotificacaoAdmin() {
+    const token = localStorage.getItem("token");
+    const usuario = obterUsuarioMenu();
+
+    if (!token || usuario?.perfil !== "ADMIN") return;
+
+    const atualizar = async () => {
+        try {
+            const resposta = await fetch(`${obterApiUrlMenu()}/admin/resumo`, {
+                headers: { Authorization: `Bearer ${token}` },
+                cache: "no-store"
+            });
+
+            if (!resposta.ok) return;
+
+            const resumo = await resposta.json();
+            atualizarAvisosAdmin(Number(resumo.pendentes) || 0);
+        } catch (erro) {
+            console.warn("Não foi possível atualizar o aviso administrativo.", erro);
+        }
+    };
+
+    await atualizar();
+    window.setInterval(atualizar, 60000);
+
+    document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) atualizar();
+    });
+}
+
+function atualizarAvisosAdmin(total) {
+    document.querySelectorAll(".admin-profile-btn").forEach((link) => {
+        link.querySelector(".admin-notification-badge")?.remove();
+        link.removeAttribute("aria-label");
+        link.removeAttribute("title");
+
+        if (total < 1) return;
+
+        const aviso = document.createElement("span");
+        aviso.className = "admin-notification-badge";
+        aviso.textContent = total > 99 ? "99+" : String(total);
+        aviso.setAttribute("aria-hidden", "true");
+        link.appendChild(aviso);
+
+        const descricao = `${total} ${total === 1 ? "ponto pendente" : "pontos pendentes"} de autorização`;
+        link.setAttribute("aria-label", `Painel administrador: ${descricao}`);
+        link.title = descricao;
+    });
+}
+
+function obterUsuarioMenu() {
+    try {
+        return JSON.parse(localStorage.getItem("usuario") || "null");
+    } catch (erro) {
+        return null;
+    }
+}
+
+function obterApiUrlMenu() {
+    if (
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+    ) {
+        return `${window.location.protocol}//${window.location.hostname}:3001/api`;
+    }
+
+    return "/api";
+}
 
 function configurarMenuPerfil(acoes) {
     if (!localStorage.getItem("token")) return;

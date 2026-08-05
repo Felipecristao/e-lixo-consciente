@@ -352,6 +352,8 @@
 }
 
 .admin-profile-btn {
+    position: relative;
+
     min-height: 44px;
     padding: 10px 22px;
 
@@ -373,6 +375,30 @@
         background-color 0.2s ease,
         border-color 0.2s ease,
         transform 0.2s ease;
+}
+
+.admin-notification-badge {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--white);
+    background: #dc2626;
+    border: 2px solid var(--white);
+    border-radius: 999px;
+    box-shadow: 0 4px 10px rgba(127, 29, 29, 0.25);
+
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1;
 }
 
 .admin-profile-btn:hover {
