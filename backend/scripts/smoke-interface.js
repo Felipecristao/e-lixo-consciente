@@ -88,6 +88,28 @@ async function executar() {
         await pagina.waitForSelector("#map");
         conferir(await pagina.locator("#mapPointsList").count(), "Lista do mapa não foi carregada");
 
+        await pagina.evaluate(() => selecionarLocalizacaoMapa({
+            titulo: "Local de teste",
+            detalhes: "Centro - Pato Branco - PR",
+            cidade: "Pato Branco",
+            latitude: -26.2295,
+            longitude: -52.6716
+        }, 16, true));
+        await pagina.waitForTimeout(600);
+
+        const marcadorLocalizacao = await pagina.locator(".map-user-location").boundingBox();
+        conferir(
+            marcadorLocalizacao && marcadorLocalizacao.width <= 24 && marcadorLocalizacao.height <= 24,
+            "Marcador da localização foi exibido fora do tamanho esperado"
+        );
+
+        const mapaCentralizado = await pagina.locator("#map").evaluate((elemento) => {
+            const limites = elemento.getBoundingClientRect();
+            const centroMapa = limites.top + limites.height / 2;
+            return Math.abs(centroMapa - window.innerHeight / 2) < 120;
+        });
+        conferir(mapaCentralizado, "Mapa não foi centralizado na tela");
+
         await pagina.goto(`${site}/meus-pontos`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector("#meusPontosContainer");
         conferir(await pagina.getByText("Meus pontos sugeridos", { exact: true }).count(), "Painel do usuário não abriu");

@@ -1130,9 +1130,9 @@ function selecionarLocalizacaoMapa(localizacao, zoom = 14, centralizarPagina = f
     renderizarMapa(pontosVisiveis);
 
     if (marcadorLocalizacaoBusca) mapa.removeLayer(marcadorLocalizacaoBusca);
-    marcadorLocalizacaoBusca = L.circleMarker(
+    marcadorLocalizacaoBusca = L.marker(
         [localizacao.latitude, localizacao.longitude],
-        { radius: 9, color: "#087f5b", weight: 3, fillColor: "#ffffff", fillOpacity: 1 }
+        { icon: criarIconeLocalizacao() }
     ).addTo(mapa).bindPopup(`<strong>Local pesquisado</strong><br>${escaparHTML(localizacao.titulo)}<br>${escaparHTML(localizacao.detalhes)}`);
 
     mapa.setView(
@@ -1153,6 +1153,16 @@ function selecionarLocalizacaoMapa(localizacao, zoom = 14, centralizarPagina = f
 
         window.setTimeout(() => mapa.invalidateSize({ pan: false }), 350);
     }
+}
+
+function criarIconeLocalizacao() {
+    return L.divIcon({
+        className: "map-user-location-wrapper",
+        html: '<span class="map-user-location" aria-hidden="true"></span>',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+        popupAnchor: [0, -14]
+    });
 }
 
 function calcularDistanciaKm(lat1, lon1, lat2, lon2) {
