@@ -20,6 +20,17 @@ export async function carregarPontos() {
     return await api("/admin/pontos");
 }
 
+export async function carregarUsuarios() {
+    return await api("/usuarios");
+}
+
+export async function alterarPerfilUsuario(id, perfil) {
+    return await api(`/usuarios/${id}/perfil`, {
+        method: "PATCH",
+        body: JSON.stringify({ perfil })
+    });
+}
+
 export async function buscarPonto(id) {
     return await api(`/admin/pontos/${id}`);
 }

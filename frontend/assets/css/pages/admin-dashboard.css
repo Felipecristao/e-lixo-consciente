@@ -640,3 +640,78 @@
 
     border-color: #f4dc9a;
 }
+
+.admin-users-panel {
+    margin-top: 28px;
+}
+
+.admin-panel__description {
+    margin: 8px 0 0;
+    color: var(--muted-text);
+    line-height: 1.6;
+}
+
+.admin-users-search {
+    max-width: 520px;
+    margin-bottom: 22px;
+}
+
+.admin-user-role {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.admin-user-role--admin {
+    color: #5f35a8;
+    background: #eee7ff;
+}
+
+.admin-user-role--usuario {
+    color: var(--green-dark);
+    background: var(--green-light);
+}
+
+.admin-user-action {
+    width: auto;
+    min-width: 170px;
+    min-height: 42px;
+    padding: 9px 14px;
+    font-size: 0.84rem;
+}
+
+.admin-user-action--remove {
+    color: #a1261d;
+    background: #fff;
+    border: 1px solid #e7aaa5;
+}
+
+.admin-user-action--remove:hover:not(:disabled) {
+    color: #fff;
+    background: #b63329;
+    border-color: #b63329;
+}
+
+.admin-user-action:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#usuariosMensagem {
+    margin-bottom: 16px;
+}
+
+@media (max-width: 760px) {
+    .admin-users-panel .admin-panel__header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-users-panel .admin-panel__header .btn,
+    .admin-user-action {
+        width: 100%;
+    }
+}

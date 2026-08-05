@@ -63,6 +63,11 @@ No painel, o administrador pode:
 - Informar o motivo da rejeição.
 - Analisar solicitações de exclusão.
 - Cadastrar pontos publicados imediatamente.
+- Pesquisar usuários cadastrados.
+- Promover usuários a administradores.
+- Remover o acesso de outros administradores.
+
+O administrador não pode remover o próprio acesso, e o sistema impede que a última conta administrativa seja rebaixada. Depois de uma promoção, o novo administrador deve sair e entrar novamente para atualizar sua sessão.
 
 ## 10. Boas práticas
 

@@ -1,7 +1,9 @@
 import {
     carregarResumo,
     carregarPontos,
-    buscarPonto
+    buscarPonto,
+    carregarUsuarios,
+    alterarPerfilUsuario
 } from "./admin-api.js";
 
 import {
@@ -30,6 +32,7 @@ import {
 } from "./admin-utils.js";
 
 let pontosCarregados = [];
+let usuariosCarregados = [];
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -44,6 +47,7 @@ async function iniciarPainel() {
     configurarBotaoSair();
     configurarBotaoAtualizar();
     configurarFiltros();
+    configurarGestaoUsuarios();
 
     configurarModal({
         onAprovar: aprovarPonto,
@@ -198,7 +202,11 @@ async function atualizarPainel() {
     pontosCarregados =
         await carregarPontos();
 
+    usuariosCarregados =
+        await carregarUsuarios();
+
     aplicarFiltros();
+    renderizarUsuarios();
 }
 
 function aplicarFiltros() {
@@ -274,6 +282,128 @@ function aplicarFiltros() {
             onRejeitar:
                 rejeitarPonto
         }
+    );
+}
+
+function configurarGestaoUsuarios() {
+    const filtro = document.getElementById("filtroUsuarios");
+    const atualizar = document.getElementById("btnAtualizarUsuarios");
+
+    filtro?.addEventListener("input", renderizarUsuarios);
+
+    atualizar?.addEventListener("click", async () => {
+        atualizar.disabled = true;
+        atualizar.textContent = "Atualizando...";
+
+        try {
+            usuariosCarregados = await carregarUsuarios();
+            renderizarUsuarios();
+            exibirMensagemUsuarios("Lista de usuários atualizada.", "sucesso");
+        } catch (erro) {
+            exibirMensagemUsuarios(erro.message, "erro");
+        } finally {
+            atualizar.disabled = false;
+            atualizar.textContent = "Atualizar usuários";
+        }
+    });
+}
+
+function renderizarUsuarios() {
+    const tabela = document.getElementById("adminUsuariosTabela");
+    const filtro = document.getElementById("filtroUsuarios");
+
+    if (!tabela) return;
+
+    const busca = String(filtro?.value || "").trim().toLowerCase();
+    const usuarios = usuariosCarregados.filter((usuario) =>
+        [usuario.nome, usuario.email]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase()
+            .includes(busca)
+    );
+
+    tabela.replaceChildren();
+
+    if (!usuarios.length) {
+        const linha = tabela.insertRow();
+        const celula = linha.insertCell();
+        celula.colSpan = 5;
+        celula.className = "admin-table-empty";
+        celula.textContent = "Nenhum usuário encontrado.";
+        return;
+    }
+
+    let usuarioAtual = null;
+
+    try {
+        usuarioAtual = JSON.parse(localStorage.getItem("usuario") || "null");
+    } catch (erro) {
+        usuarioAtual = null;
+    }
+
+    usuarios.forEach((usuario) => {
+        const linha = tabela.insertRow();
+        linha.insertCell().textContent = usuario.nome || "Não informado";
+        linha.insertCell().textContent = usuario.email || "Não informado";
+
+        const perfil = linha.insertCell();
+        const selo = document.createElement("span");
+        selo.className = `admin-user-role admin-user-role--${String(usuario.perfil).toLowerCase()}`;
+        selo.textContent = usuario.perfil === "ADMIN" ? "Administrador" : "Usuário";
+        perfil.appendChild(selo);
+
+        linha.insertCell().textContent = usuario.criado_em
+            ? new Date(usuario.criado_em).toLocaleDateString("pt-BR")
+            : "Não informado";
+
+        const acoes = linha.insertCell();
+        const botao = document.createElement("button");
+        const administrador = usuario.perfil === "ADMIN";
+        const proprioUsuario = Number(usuario.id) === Number(usuarioAtual?.id);
+
+        botao.type = "button";
+        botao.className = administrador
+            ? "btn admin-user-action admin-user-action--remove"
+            : "btn btn--primary admin-user-action";
+        botao.textContent = administrador ? "Remover acesso" : "Tornar administrador";
+        botao.disabled = proprioUsuario;
+        botao.title = proprioUsuario
+            ? "Você não pode remover o próprio acesso."
+            : "";
+        botao.addEventListener("click", () =>
+            confirmarAlteracaoPerfil(usuario, administrador ? "USUARIO" : "ADMIN")
+        );
+        acoes.appendChild(botao);
+    });
+}
+
+async function confirmarAlteracaoPerfil(usuario, novoPerfil) {
+    const acao = novoPerfil === "ADMIN"
+        ? `tornar ${usuario.nome} administrador`
+        : `remover o acesso administrativo de ${usuario.nome}`;
+
+    if (!window.confirm(`Deseja realmente ${acao}?`)) return;
+
+    try {
+        const resposta = await alterarPerfilUsuario(usuario.id, novoPerfil);
+        usuariosCarregados = await carregarUsuarios();
+        await carregarResumo();
+        renderizarUsuarios();
+        exibirMensagemUsuarios(resposta.mensagem, "sucesso");
+    } catch (erro) {
+        exibirMensagemUsuarios(erro.message, "erro");
+    }
+}
+
+function exibirMensagemUsuarios(texto, tipo) {
+    const mensagem = document.getElementById("usuariosMensagem");
+    if (!mensagem) return;
+
+    mensagem.textContent = texto || "Não foi possível concluir a ação.";
+    mensagem.className = "form-message";
+    mensagem.classList.add(
+        tipo === "sucesso" ? "form-message--success" : "form-message--error"
     );
 }
 

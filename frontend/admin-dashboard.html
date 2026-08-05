@@ -320,6 +320,56 @@
 
         </section>
 
+        <section class="admin-panel admin-users-panel">
+
+          <div class="admin-panel__header">
+            <div>
+              <span class="label">Controle de acesso</span>
+              <h2>Gerenciar usuários</h2>
+              <p class="admin-panel__description">
+                Promova contas cadastradas ou remova o acesso administrativo.
+              </p>
+            </div>
+
+            <button type="button" id="btnAtualizarUsuarios" class="btn btn--outline-green">
+              Atualizar usuários
+            </button>
+          </div>
+
+          <div class="form-group admin-users-search">
+            <label for="filtroUsuarios">Pesquisar usuário</label>
+            <input
+              type="search"
+              id="filtroUsuarios"
+              placeholder="Nome ou e-mail"
+            >
+          </div>
+
+          <div id="usuariosMensagem" class="form-message"></div>
+
+          <div class="admin-table-wrapper">
+            <table class="admin-table admin-users-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>E-mail</th>
+                  <th>Perfil</th>
+                  <th>Cadastro</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsuariosTabela">
+                <tr>
+                  <td colspan="5" class="admin-table-empty">
+                    Carregando usuários...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
       </div>
 
     </section>

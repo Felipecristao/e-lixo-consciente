@@ -170,6 +170,34 @@ async function executar() {
         const tokenAdmin = loginAdmin.dados?.token;
         conferir(tokenAdmin, "Login administrativo sem token");
 
+        const usuariosAdmin = await esperarStatus("/usuarios", 200, {
+            token: tokenAdmin
+        });
+        conferir(
+            usuariosAdmin.dados.some((usuario) => usuario.id === usuarioId),
+            "Usuário temporário não apareceu na gestão administrativa"
+        );
+        conferir(
+            !JSON.stringify(usuariosAdmin.dados).includes('"senha"'),
+            "Listagem administrativa expôs senha"
+        );
+        await esperarStatus(`/usuarios/${adminId}/perfil`, 409, {
+            method: "PATCH",
+            token: tokenAdmin,
+            body: { perfil: "USUARIO" }
+        });
+        await esperarStatus(`/usuarios/${usuarioId}/perfil`, 200, {
+            method: "PATCH",
+            token: tokenAdmin,
+            body: { perfil: "ADMIN" }
+        });
+        await esperarStatus(`/usuarios/${usuarioId}/perfil`, 200, {
+            method: "PATCH",
+            token: tokenAdmin,
+            body: { perfil: "USUARIO" }
+        });
+        etapas.push("gestão segura de perfis administrativos");
+
         await esperarStatus(`/admin/pontos/${pontoRejeitadoId}/rejeitar`, 200, {
             method: "PUT",
             token: tokenAdmin,

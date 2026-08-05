@@ -112,7 +112,21 @@ async function executar() {
 
         await pagina.goto(`${site}/admin-dashboard.html`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector("#adminPontosTabela");
+        await pagina.waitForSelector("#adminUsuariosTabela");
         conferir(await pagina.getByText("Painel Administrativo", { exact: true }).count(), "Painel administrativo não abriu");
+        conferir(await pagina.getByText(emailUsuario, { exact: true }).count(), "Usuário não apareceu na gestão administrativa");
+
+        const linhaUsuario = pagina
+            .locator("#adminUsuariosTabela tr")
+            .filter({ hasText: emailUsuario });
+
+        pagina.once("dialog", (dialogo) => dialogo.accept());
+        await linhaUsuario.getByRole("button", { name: "Tornar administrador" }).click();
+        await linhaUsuario.getByRole("button", { name: "Remover acesso" }).waitFor();
+
+        pagina.once("dialog", (dialogo) => dialogo.accept());
+        await linhaUsuario.getByRole("button", { name: "Remover acesso" }).click();
+        await linhaUsuario.getByRole("button", { name: "Tornar administrador" }).waitFor();
 
         conferir(errosPagina.length === 0, `Erros JavaScript no navegador: ${errosPagina.join(" | ")}`);
         console.log("Teste de interface concluído: cadastro, login, navegação e painel administrativo aprovados.");

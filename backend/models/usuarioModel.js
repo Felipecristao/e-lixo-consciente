@@ -119,25 +119,75 @@ module.exports = {
 
     },
 
-    async atualizar(id, nome, email, perfil) {
+    async alterarPerfilSeguro({ usuarioId, solicitanteId, perfil }) {
+        const conexao = await db.getConnection();
 
-        await db.execute(
-            `
-            UPDATE usuarios
-            SET
-                nome = ?,
-                email = ?,
-                perfil = ?
-            WHERE id = ?
-            `,
-            [
-                nome,
-                email,
-                perfil,
-                id
-            ]
-        );
+        try {
+            await conexao.beginTransaction();
 
+            const [usuarios] = await conexao.execute(
+                `
+                SELECT id, nome, email, perfil
+                FROM usuarios
+                WHERE id = ?
+                LIMIT 1
+                FOR UPDATE
+                `,
+                [usuarioId]
+            );
+
+            if (!usuarios.length) {
+                const erro = new Error("Usuário não encontrado.");
+                erro.codigo = "USUARIO_NAO_ENCONTRADO";
+                throw erro;
+            }
+
+            const usuario = usuarios[0];
+
+            if (usuarioId === solicitanteId && perfil !== "ADMIN") {
+                const erro = new Error(
+                    "Você não pode remover o próprio acesso administrativo."
+                );
+                erro.codigo = "PROPRIO_ACESSO";
+                throw erro;
+            }
+
+            if (usuario.perfil === "ADMIN" && perfil === "USUARIO") {
+                const [administradores] = await conexao.execute(
+                    `
+                    SELECT id
+                    FROM usuarios
+                    WHERE perfil = 'ADMIN'
+                    FOR UPDATE
+                    `
+                );
+
+                if (administradores.length <= 1) {
+                    const erro = new Error(
+                        "O último administrador do sistema não pode ser removido."
+                    );
+                    erro.codigo = "ULTIMO_ADMIN";
+                    throw erro;
+                }
+            }
+
+            await conexao.execute(
+                "UPDATE usuarios SET perfil = ? WHERE id = ?",
+                [perfil, usuarioId]
+            );
+
+            await conexao.commit();
+
+            return {
+                ...usuario,
+                perfil
+            };
+        } catch (erro) {
+            await conexao.rollback();
+            throw erro;
+        } finally {
+            conexao.release();
+        }
     },
 
     async atualizarPerfil(id, usuario) {
@@ -244,18 +294,6 @@ module.exports = {
             `
             UPDATE recuperacao_senha
             SET usado_em = NOW()
-            WHERE id = ?
-            `,
-            [id]
-        );
-
-    },
-
-    async excluir(id) {
-
-        await db.execute(
-            `
-            DELETE FROM usuarios
             WHERE id = ?
             `,
             [id]

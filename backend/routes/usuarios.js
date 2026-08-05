@@ -11,7 +11,6 @@ router.use(adminMiddleware);
 
 router.get("/", usuariosController.listar);
 router.get("/:id", usuariosController.buscarPorId);
-router.put("/:id", usuariosController.atualizar);
-router.delete("/:id", usuariosController.excluir);
+router.patch("/:id/perfil", usuariosController.alterarPerfil);
 
 module.exports = router;

@@ -85,7 +85,8 @@ Dockerfile                  imagem da aplicação
 - Analisa solicitações de exclusão.
 - Atualiza ou exclui pontos.
 - Cadastra pontos já aprovados, sem moderação adicional.
-- Gerencia usuários por rotas protegidas.
+- Lista usuários e gerencia perfis administrativos por rota protegida.
+- Não pode rebaixar a própria conta nem remover o último administrador.
 
 ## 7. Cadastro de ponto
 
@@ -160,6 +161,14 @@ Todas as rotas utilizam o prefixo `/api`.
 | PUT | `/admin/pontos/:id/exclusao/rejeitar` | Rejeitar exclusão |
 
 As rotas administrativas exigem JWT válido e perfil `ADMIN`.
+
+### Gestão de usuários
+
+| Método | Rota | Função |
+|---|---|---|
+| GET | `/usuarios` | Listar usuários sem retornar senhas |
+| GET | `/usuarios/:id` | Consultar um usuário |
+| PATCH | `/usuarios/:id/perfil` | Promover ou rebaixar perfil com proteção do próprio acesso e do último administrador |
 
 ## 10. Segurança
 
