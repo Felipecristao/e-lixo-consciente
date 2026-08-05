@@ -34,6 +34,10 @@ import {
 
 let pontosCarregados = [];
 let usuariosCarregados = [];
+let paginaPontos = 1;
+let paginaUsuarios = 1;
+
+const ITENS_POR_PAGINA = 7;
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -185,14 +189,14 @@ function configurarFiltros() {
     if (filtroStatus) {
         filtroStatus.addEventListener(
             "change",
-            aplicarFiltros
+            () => aplicarFiltros(true)
         );
     }
 
     if (filtroBusca) {
         filtroBusca.addEventListener(
             "input",
-            aplicarFiltros
+            () => aplicarFiltros(true)
         );
     }
 }
@@ -210,7 +214,7 @@ async function atualizarPainel() {
     renderizarUsuarios();
 }
 
-function aplicarFiltros() {
+function aplicarFiltros(reiniciarPagina = false) {
     const filtroStatus =
         document.getElementById(
             "filtroStatus"
@@ -271,8 +275,14 @@ function aplicarFiltros() {
             }
         );
 
+    if (reiniciarPagina) paginaPontos = 1;
+
+    const totalPaginas = Math.max(1, Math.ceil(pontosFiltrados.length / ITENS_POR_PAGINA));
+    paginaPontos = Math.min(paginaPontos, totalPaginas);
+    const inicio = (paginaPontos - 1) * ITENS_POR_PAGINA;
+
     preencherTabela(
-        pontosFiltrados,
+        pontosFiltrados.slice(inicio, inicio + ITENS_POR_PAGINA),
         {
             onVisualizar:
                 visualizarPonto,
@@ -284,13 +294,18 @@ function aplicarFiltros() {
                 rejeitarPonto
         }
     );
+
+    renderizarPaginacao("paginacaoPontos", pontosFiltrados.length, paginaPontos, (pagina) => {
+        paginaPontos = pagina;
+        aplicarFiltros();
+    });
 }
 
 function configurarGestaoUsuarios() {
     const filtro = document.getElementById("filtroUsuarios");
     const atualizar = document.getElementById("btnAtualizarUsuarios");
 
-    filtro?.addEventListener("input", renderizarUsuarios);
+    filtro?.addEventListener("input", () => renderizarUsuarios(true));
 
     atualizar?.addEventListener("click", async () => {
         atualizar.disabled = true;
@@ -309,7 +324,7 @@ function configurarGestaoUsuarios() {
     });
 }
 
-function renderizarUsuarios() {
+function renderizarUsuarios(reiniciarPagina = false) {
     const tabela = document.getElementById("adminUsuariosTabela");
     const filtro = document.getElementById("filtroUsuarios");
 
@@ -324,6 +339,13 @@ function renderizarUsuarios() {
             .includes(busca)
     );
 
+    if (reiniciarPagina) paginaUsuarios = 1;
+
+    const totalPaginas = Math.max(1, Math.ceil(usuarios.length / ITENS_POR_PAGINA));
+    paginaUsuarios = Math.min(paginaUsuarios, totalPaginas);
+    const inicio = (paginaUsuarios - 1) * ITENS_POR_PAGINA;
+    const usuariosDaPagina = usuarios.slice(inicio, inicio + ITENS_POR_PAGINA);
+
     tabela.replaceChildren();
 
     if (!usuarios.length) {
@@ -332,6 +354,7 @@ function renderizarUsuarios() {
         celula.colSpan = 6;
         celula.className = "admin-table-empty";
         celula.textContent = "Nenhum usuário encontrado.";
+        renderizarPaginacao("paginacaoUsuarios", 0, 1, () => {});
         return;
     }
 
@@ -343,7 +366,7 @@ function renderizarUsuarios() {
         usuarioAtual = null;
     }
 
-    usuarios.forEach((usuario) => {
+    usuariosDaPagina.forEach((usuario) => {
         const linha = tabela.insertRow();
         linha.insertCell().textContent = usuario.nome || "Não informado";
         linha.insertCell().textContent = usuario.email || "Não informado";
@@ -372,9 +395,7 @@ function renderizarUsuarios() {
         const proprioUsuario = Number(usuario.id) === Number(usuarioAtual?.id);
 
         botao.type = "button";
-        botao.className = administrador
-            ? "btn admin-user-action admin-user-action--remove"
-            : "btn btn--primary admin-user-action";
+        botao.className = "btn admin-user-action admin-user-action--role";
         botao.textContent = administrador ? "Tornar colaborador" : "Tornar administrador";
         botao.disabled = proprioUsuario || !ativo;
         botao.title = proprioUsuario
@@ -388,8 +409,8 @@ function renderizarUsuarios() {
         const botaoStatus = document.createElement("button");
         botaoStatus.type = "button";
         botaoStatus.className = ativo
-            ? "btn admin-user-action admin-user-action--remove"
-            : "btn btn--primary admin-user-action";
+            ? "btn admin-user-action admin-user-action--status"
+            : "btn admin-user-action admin-user-action--reactivate";
         botaoStatus.textContent = ativo ? "Inativar usuário" : "Reativar usuário";
         botaoStatus.disabled = proprioUsuario;
         botaoStatus.title = proprioUsuario
@@ -400,6 +421,88 @@ function renderizarUsuarios() {
         );
         acoes.appendChild(botaoStatus);
     });
+
+    renderizarPaginacao("paginacaoUsuarios", usuarios.length, paginaUsuarios, (pagina) => {
+        paginaUsuarios = pagina;
+        renderizarUsuarios();
+    });
+}
+
+function renderizarPaginacao(id, totalItens, paginaAtual, aoMudarPagina) {
+    const container = document.getElementById(id);
+    if (!container) return;
+
+    container.replaceChildren();
+
+    if (totalItens <= ITENS_POR_PAGINA) {
+        container.hidden = true;
+        return;
+    }
+
+    container.hidden = false;
+    const totalPaginas = Math.ceil(totalItens / ITENS_POR_PAGINA);
+    const inicio = (paginaAtual - 1) * ITENS_POR_PAGINA + 1;
+    const fim = Math.min(paginaAtual * ITENS_POR_PAGINA, totalItens);
+
+    const resumo = document.createElement("span");
+    resumo.className = "admin-pagination__summary";
+    resumo.textContent = `${inicio}–${fim} de ${totalItens}`;
+    container.appendChild(resumo);
+
+    const controles = document.createElement("div");
+    controles.className = "admin-pagination__controls";
+
+    controles.appendChild(criarBotaoPagina("‹", paginaAtual - 1, paginaAtual === 1, "Página anterior", aoMudarPagina));
+
+    obterPaginasVisiveis(totalPaginas, paginaAtual).forEach((pagina) => {
+        if (pagina === "...") {
+            const intervalo = document.createElement("span");
+            intervalo.className = "admin-pagination__ellipsis";
+            intervalo.textContent = "…";
+            controles.appendChild(intervalo);
+            return;
+        }
+
+        const botao = criarBotaoPagina(String(pagina), pagina, false, `Página ${pagina}`, aoMudarPagina);
+        if (pagina === paginaAtual) {
+            botao.classList.add("is-active");
+            botao.setAttribute("aria-current", "page");
+        }
+        controles.appendChild(botao);
+    });
+
+    controles.appendChild(criarBotaoPagina("›", paginaAtual + 1, paginaAtual === totalPaginas, "Próxima página", aoMudarPagina));
+    container.appendChild(controles);
+}
+
+function criarBotaoPagina(texto, pagina, desabilitado, rotulo, aoMudarPagina) {
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "admin-pagination__button";
+    botao.textContent = texto;
+    botao.disabled = desabilitado;
+    botao.setAttribute("aria-label", rotulo);
+    botao.addEventListener("click", () => aoMudarPagina(pagina));
+    return botao;
+}
+
+function obterPaginasVisiveis(totalPaginas, paginaAtual) {
+    if (totalPaginas <= 7) {
+        return Array.from({ length: totalPaginas }, (_, indice) => indice + 1);
+    }
+
+    const paginas = new Set([1, totalPaginas]);
+    for (let pagina = paginaAtual - 1; pagina <= paginaAtual + 1; pagina += 1) {
+        if (pagina > 1 && pagina < totalPaginas) paginas.add(pagina);
+    }
+
+    const ordenadas = [...paginas].sort((a, b) => a - b);
+    const resultado = [];
+    ordenadas.forEach((pagina, indice) => {
+        if (indice && pagina - ordenadas[indice - 1] > 1) resultado.push("...");
+        resultado.push(pagina);
+    });
+    return resultado;
 }
 
 async function confirmarAlteracaoPerfil(usuario, novoPerfil) {

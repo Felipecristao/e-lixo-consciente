@@ -69,6 +69,7 @@ No painel, o administrador pode:
 - Promover usuários a administradores.
 - Alterar administradores para colaboradores, retirando apenas os privilégios administrativos.
 - Inativar e reativar contas sem excluir o cadastro, os pontos ou o histórico.
+- Navegar pelas listas de pontos e usuários em páginas de até sete registros.
 
 O administrador não pode rebaixar nem inativar a própria conta, e o sistema protege o último administrador ativo. Uma conta inativada perde o acesso imediatamente, inclusive quando ainda possui uma sessão aberta.
 

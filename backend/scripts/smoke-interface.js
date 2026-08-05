@@ -25,8 +25,8 @@ function conferir(condicao, mensagem) {
 
 async function limparDados() {
     await db.execute(
-        "DELETE FROM usuarios WHERE email IN (?, ?)",
-        [emailUsuario, emailAdmin]
+        "DELETE FROM usuarios WHERE email IN (?, ?) OR email LIKE ?",
+        [emailUsuario, emailAdmin, `ui.extra.${id}.%@example.invalid`]
     );
 }
 
@@ -36,6 +36,13 @@ async function criarAdmin() {
         "INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, 'ADMIN')",
         ["Administrador da interface", emailAdmin, hash]
     );
+
+    for (let indice = 1; indice <= 8; indice += 1) {
+        await db.execute(
+            "INSERT INTO usuarios (nome, email, senha, perfil) VALUES (?, ?, ?, 'USUARIO')",
+            [`Pessoa adicional ${indice}`, `ui.extra.${id}.${indice}@example.invalid`, hash]
+        );
+    }
 }
 
 async function executar() {
@@ -147,11 +154,34 @@ async function executar() {
         );
         await pagina.unroute("**/api/admin/resumo");
 
+        const pontosPaginacao = Array.from({ length: 9 }, (_, indice) => ({
+            id: 9000 + indice,
+            nome: `PONTO DE PAGINAÇÃO ${indice + 1}`,
+            cidade: "Pato Branco",
+            tipo: "Cooperativa",
+            usuario: "Teste",
+            data_cadastro: new Date().toISOString(),
+            status: "APROVADO",
+            exclusao_status: ""
+        }));
+        await pagina.route("**/api/admin/pontos", (rota) => rota.fulfill({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify(pontosPaginacao)
+        }));
+
         await pagina.goto(`${site}/painel-admin`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector("#adminPontosTabela");
         await pagina.waitForSelector("#adminUsuariosTabela");
         conferir(await pagina.getByText("Painel Administrativo", { exact: true }).count(), "Painel administrativo não abriu");
-        conferir(await pagina.getByText(emailUsuario, { exact: true }).count(), "Usuário não apareceu na gestão administrativa");
+        conferir(await pagina.locator("#adminPontosTabela tr").count() === 7, "Tabela de pontos não respeitou o limite por página");
+        conferir(await pagina.locator("#paginacaoPontos:not([hidden])").count(), "Paginação dos pontos não apareceu");
+        conferir(await pagina.locator("#adminUsuariosTabela tr").count() === 7, "Tabela de usuários não respeitou o limite por página");
+        conferir(await pagina.locator("#paginacaoUsuarios:not([hidden])").count(), "Paginação dos usuários não apareceu");
+        await pagina.unroute("**/api/admin/pontos");
+
+        await pagina.fill("#filtroUsuarios", emailUsuario);
+        conferir(await pagina.getByText(emailUsuario, { exact: true }).count(), "Pesquisa não encontrou o usuário");
 
         const linhaUsuario = pagina
             .locator("#adminUsuariosTabela tr")
