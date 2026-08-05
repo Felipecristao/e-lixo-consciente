@@ -196,7 +196,33 @@ async function executar() {
             token: tokenAdmin,
             body: { perfil: "USUARIO" }
         });
-        etapas.push("gestão segura de perfis administrativos");
+        await esperarStatus(`/usuarios/${adminId}/status`, 409, {
+            method: "PATCH",
+            token: tokenAdmin,
+            body: { ativo: false }
+        });
+        await esperarStatus(`/usuarios/${usuarioId}/status`, 200, {
+            method: "PATCH",
+            token: tokenAdmin,
+            body: { ativo: false }
+        });
+        await esperarStatus("/auth/me", 401, { token: tokenUsuario });
+        await esperarStatus("/auth/login", 403, {
+            method: "POST",
+            body: { email: emailUsuario, senha: senhaUsuario }
+        });
+        await esperarStatus(`/usuarios/${usuarioId}/status`, 200, {
+            method: "PATCH",
+            token: tokenAdmin,
+            body: { ativo: true }
+        });
+        const loginUsuarioReativado = await esperarStatus("/auth/login", 200, {
+            method: "POST",
+            body: { email: emailUsuario, senha: senhaUsuario }
+        });
+        const tokenUsuarioReativado = loginUsuarioReativado.dados?.token;
+        conferir(tokenUsuarioReativado, "Usuário reativado não conseguiu entrar");
+        etapas.push("gestão segura de perfis e inativação de usuários");
 
         await esperarStatus(`/admin/pontos/${pontoRejeitadoId}/rejeitar`, 200, {
             method: "PUT",
@@ -208,7 +234,7 @@ async function executar() {
             token: tokenAdmin
         });
 
-        const meus = await esperarStatus("/pontos/meus", 200, { token: tokenUsuario });
+        const meus = await esperarStatus("/pontos/meus", 200, { token: tokenUsuarioReativado });
         conferir(
             meus.dados.some((ponto) => ponto.id === pontoRejeitadoId && ponto.status === "REJEITADO"),
             "Rejeição não apareceu no painel do usuário"
@@ -220,7 +246,7 @@ async function executar() {
 
         await esperarStatus(`/pontos/${pontoAprovadoId}/solicitar-exclusao`, 200, {
             method: "POST",
-            token: tokenUsuario,
+            token: tokenUsuarioReativado,
             body: { motivo: "Teste do fluxo de exclusão" }
         });
         await esperarStatus(`/admin/pontos/${pontoAprovadoId}/exclusao/rejeitar`, 200, {
@@ -229,7 +255,7 @@ async function executar() {
         });
         await esperarStatus(`/pontos/${pontoAprovadoId}/solicitar-exclusao`, 200, {
             method: "POST",
-            token: tokenUsuario,
+            token: tokenUsuarioReativado,
             body: { motivo: "Segundo teste do fluxo de exclusão" }
         });
         await esperarStatus(`/admin/pontos/${pontoAprovadoId}/exclusao/aprovar`, 200, {
@@ -250,7 +276,7 @@ async function executar() {
 
         await esperarStatus("/auth/me/senha", 200, {
             method: "PUT",
-            token: tokenUsuario,
+            token: tokenUsuarioReativado,
             body: {
                 senha_atual: senhaUsuario,
                 nova_senha: novaSenhaUsuario,

@@ -67,9 +67,10 @@ No painel, o administrador pode:
 - Cadastrar pontos publicados imediatamente.
 - Pesquisar usuários cadastrados.
 - Promover usuários a administradores.
-- Remover o acesso de outros administradores.
+- Alterar administradores para colaboradores, retirando apenas os privilégios administrativos.
+- Inativar e reativar contas sem excluir o cadastro, os pontos ou o histórico.
 
-O administrador não pode remover o próprio acesso, e o sistema impede que a última conta administrativa seja rebaixada. Depois de uma promoção, o novo administrador deve sair e entrar novamente para atualizar sua sessão.
+O administrador não pode rebaixar nem inativar a própria conta, e o sistema protege o último administrador ativo. Uma conta inativada perde o acesso imediatamente, inclusive quando ainda possui uma sessão aberta.
 
 ## 10. Boas práticas
 

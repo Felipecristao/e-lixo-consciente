@@ -19,6 +19,7 @@ module.exports = {
                 estado,
                 complemento,
                 perfil,
+                ativo,
                 criado_em
             FROM usuarios
             ORDER BY nome
@@ -46,7 +47,8 @@ module.exports = {
                 cidade,
                 estado,
                 complemento,
-                perfil
+                perfil,
+                ativo
             FROM usuarios
             WHERE email = ?
             LIMIT 1
@@ -76,6 +78,7 @@ module.exports = {
                 estado,
                 complemento,
                 perfil,
+                ativo,
                 criado_em
             FROM usuarios
             WHERE id = ?
@@ -127,7 +130,7 @@ module.exports = {
 
             const [usuarios] = await conexao.execute(
                 `
-                SELECT id, nome, email, perfil
+                SELECT id, nome, email, perfil, ativo
                 FROM usuarios
                 WHERE id = ?
                 LIMIT 1
@@ -157,7 +160,7 @@ module.exports = {
                     `
                     SELECT id
                     FROM usuarios
-                    WHERE perfil = 'ADMIN'
+                    WHERE perfil = 'ADMIN' AND ativo = 1
                     FOR UPDATE
                     `
                 );
@@ -182,6 +185,70 @@ module.exports = {
                 ...usuario,
                 perfil
             };
+        } catch (erro) {
+            await conexao.rollback();
+            throw erro;
+        } finally {
+            conexao.release();
+        }
+    },
+
+    async alterarStatusSeguro({ usuarioId, solicitanteId, ativo }) {
+        const conexao = await db.getConnection();
+
+        try {
+            await conexao.beginTransaction();
+
+            const [usuarios] = await conexao.execute(
+                `
+                SELECT id, nome, email, perfil, ativo
+                FROM usuarios
+                WHERE id = ?
+                LIMIT 1
+                FOR UPDATE
+                `,
+                [usuarioId]
+            );
+
+            if (!usuarios.length) {
+                const erro = new Error("Usuário não encontrado.");
+                erro.codigo = "USUARIO_NAO_ENCONTRADO";
+                throw erro;
+            }
+
+            const usuario = usuarios[0];
+
+            if (usuarioId === solicitanteId && !ativo) {
+                const erro = new Error("Você não pode inativar a própria conta.");
+                erro.codigo = "PROPRIA_CONTA";
+                throw erro;
+            }
+
+            if (usuario.perfil === "ADMIN" && Number(usuario.ativo) && !ativo) {
+                const [administradores] = await conexao.execute(
+                    `
+                    SELECT id
+                    FROM usuarios
+                    WHERE perfil = 'ADMIN' AND ativo = 1
+                    FOR UPDATE
+                    `
+                );
+
+                if (administradores.length <= 1) {
+                    const erro = new Error("O último administrador ativo não pode ser inativado.");
+                    erro.codigo = "ULTIMO_ADMIN";
+                    throw erro;
+                }
+            }
+
+            await conexao.execute(
+                "UPDATE usuarios SET ativo = ? WHERE id = ?",
+                [ativo ? 1 : 0, usuarioId]
+            );
+
+            await conexao.commit();
+
+            return { ...usuario, ativo: ativo ? 1 : 0 };
         } catch (erro) {
             await conexao.rollback();
             throw erro;

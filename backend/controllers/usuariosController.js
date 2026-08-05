@@ -54,7 +54,7 @@ module.exports = {
             return res.json({
                 mensagem: perfil === "ADMIN"
                     ? "Usuário promovido a administrador."
-                    : "Acesso administrativo removido.",
+                    : "Usuário alterado para colaborador.",
                 usuario
             });
         } catch (erro) {
@@ -72,6 +72,47 @@ module.exports = {
             console.error(erro);
             return res.status(500).json({
                 erro: "Erro ao alterar o perfil do usuário."
+            });
+        }
+    },
+
+    async alterarStatus(req, res) {
+        try {
+            const usuarioId = Number(req.params.id);
+            const ativo = req.body.ativo;
+
+            if (!Number.isInteger(usuarioId) || usuarioId <= 0) {
+                return res.status(400).json({ erro: "Usuário inválido." });
+            }
+
+            if (typeof ativo !== "boolean") {
+                return res.status(400).json({ erro: "Status inválido." });
+            }
+
+            const usuario = await usuarioModel.alterarStatusSeguro({
+                usuarioId,
+                solicitanteId: Number(req.usuario.id),
+                ativo
+            });
+
+            return res.json({
+                mensagem: ativo
+                    ? "Usuário reativado com sucesso."
+                    : "Usuário inativado com sucesso.",
+                usuario
+            });
+        } catch (erro) {
+            if (erro.codigo === "USUARIO_NAO_ENCONTRADO") {
+                return res.status(404).json({ erro: erro.message });
+            }
+
+            if (erro.codigo === "PROPRIA_CONTA" || erro.codigo === "ULTIMO_ADMIN") {
+                return res.status(409).json({ erro: erro.message });
+            }
+
+            console.error(erro);
+            return res.status(500).json({
+                erro: "Erro ao alterar o status do usuário."
             });
         }
     }

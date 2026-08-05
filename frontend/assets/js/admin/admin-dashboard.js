@@ -3,8 +3,9 @@ import {
     carregarPontos,
     buscarPonto,
     carregarUsuarios,
-    alterarPerfilUsuario
-} from "./admin-api.js";
+    alterarPerfilUsuario,
+    alterarStatusUsuario
+} from "./admin-api.js?v=20260805-1";
 
 import {
     preencherTabela
@@ -328,7 +329,7 @@ function renderizarUsuarios() {
     if (!usuarios.length) {
         const linha = tabela.insertRow();
         const celula = linha.insertCell();
-        celula.colSpan = 5;
+        celula.colSpan = 6;
         celula.className = "admin-table-empty";
         celula.textContent = "Nenhum usuário encontrado.";
         return;
@@ -350,14 +351,22 @@ function renderizarUsuarios() {
         const perfil = linha.insertCell();
         const selo = document.createElement("span");
         selo.className = `admin-user-role admin-user-role--${String(usuario.perfil).toLowerCase()}`;
-        selo.textContent = usuario.perfil === "ADMIN" ? "Administrador" : "Usuário";
+        selo.textContent = usuario.perfil === "ADMIN" ? "Administrador" : "Colaborador";
         perfil.appendChild(selo);
+
+        const status = linha.insertCell();
+        const ativo = Number(usuario.ativo) === 1;
+        const seloStatus = document.createElement("span");
+        seloStatus.className = `admin-user-status admin-user-status--${ativo ? "ativo" : "inativo"}`;
+        seloStatus.textContent = ativo ? "Ativo" : "Inativo";
+        status.appendChild(seloStatus);
 
         linha.insertCell().textContent = usuario.criado_em
             ? new Date(usuario.criado_em).toLocaleDateString("pt-BR")
             : "Não informado";
 
         const acoes = linha.insertCell();
+        acoes.className = "admin-user-actions";
         const botao = document.createElement("button");
         const administrador = usuario.perfil === "ADMIN";
         const proprioUsuario = Number(usuario.id) === Number(usuarioAtual?.id);
@@ -366,27 +375,60 @@ function renderizarUsuarios() {
         botao.className = administrador
             ? "btn admin-user-action admin-user-action--remove"
             : "btn btn--primary admin-user-action";
-        botao.textContent = administrador ? "Remover acesso" : "Tornar administrador";
-        botao.disabled = proprioUsuario;
+        botao.textContent = administrador ? "Tornar colaborador" : "Tornar administrador";
+        botao.disabled = proprioUsuario || !ativo;
         botao.title = proprioUsuario
-            ? "Você não pode remover o próprio acesso."
-            : "";
+            ? "Você não pode alterar o próprio perfil."
+            : !ativo ? "Reative o usuário antes de alterar o perfil." : "";
         botao.addEventListener("click", () =>
             confirmarAlteracaoPerfil(usuario, administrador ? "USUARIO" : "ADMIN")
         );
         acoes.appendChild(botao);
+
+        const botaoStatus = document.createElement("button");
+        botaoStatus.type = "button";
+        botaoStatus.className = ativo
+            ? "btn admin-user-action admin-user-action--remove"
+            : "btn btn--primary admin-user-action";
+        botaoStatus.textContent = ativo ? "Inativar usuário" : "Reativar usuário";
+        botaoStatus.disabled = proprioUsuario;
+        botaoStatus.title = proprioUsuario
+            ? "Você não pode inativar a própria conta."
+            : "";
+        botaoStatus.addEventListener("click", () =>
+            confirmarAlteracaoStatus(usuario, !ativo)
+        );
+        acoes.appendChild(botaoStatus);
     });
 }
 
 async function confirmarAlteracaoPerfil(usuario, novoPerfil) {
     const acao = novoPerfil === "ADMIN"
         ? `tornar ${usuario.nome} administrador`
-        : `remover o acesso administrativo de ${usuario.nome}`;
+        : `tornar ${usuario.nome} colaborador`;
 
     if (!window.confirm(`Deseja realmente ${acao}?`)) return;
 
     try {
         const resposta = await alterarPerfilUsuario(usuario.id, novoPerfil);
+        usuariosCarregados = await carregarUsuarios();
+        await carregarResumo();
+        renderizarUsuarios();
+        exibirMensagemUsuarios(resposta.mensagem, "sucesso");
+    } catch (erro) {
+        exibirMensagemUsuarios(erro.message, "erro");
+    }
+}
+
+async function confirmarAlteracaoStatus(usuario, ativo) {
+    const acao = ativo
+        ? `reativar o acesso de ${usuario.nome}`
+        : `inativar o acesso de ${usuario.nome}`;
+
+    if (!window.confirm(`Deseja realmente ${acao}?`)) return;
+
+    try {
+        const resposta = await alterarStatusUsuario(usuario.id, ativo);
         usuariosCarregados = await carregarUsuarios();
         await carregarResumo();
         renderizarUsuarios();

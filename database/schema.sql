@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     estado CHAR(2),
     complemento VARCHAR(120),
     perfil ENUM('ADMIN','USUARIO') DEFAULT 'USUARIO',
+    ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

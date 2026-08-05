@@ -89,8 +89,8 @@ Dockerfile                  imagem da aplicação
 - Analisa solicitações de exclusão.
 - Atualiza ou exclui pontos.
 - Cadastra pontos já aprovados, sem moderação adicional.
-- Lista usuários e gerencia perfis administrativos por rota protegida.
-- Não pode rebaixar a própria conta nem remover o último administrador.
+- Lista usuários, gerencia perfis administrativos e ativa ou inativa contas por rota protegida.
+- Não pode rebaixar nem inativar a própria conta ou remover o último administrador ativo.
 
 ## 8. Cadastro de ponto
 
@@ -104,7 +104,7 @@ Os horários são coletados por seleção estruturada de dias e faixas de funcio
 
 | Tabela | Responsabilidade |
 |---|---|
-| `usuarios` | Conta, endereço, perfil e senha criptografada |
+| `usuarios` | Conta, endereço, perfil, status de acesso e senha criptografada |
 | `tipos_ponto` | Classificação dos locais de coleta |
 | `materiais` | Categorias de resíduos aceitos |
 | `pontos_coleta` | Dados, localização, contato, status e auditoria do ponto |
@@ -173,6 +173,7 @@ As rotas administrativas exigem JWT válido e perfil `ADMIN`.
 | GET | `/usuarios` | Listar usuários sem retornar senhas |
 | GET | `/usuarios/:id` | Consultar um usuário |
 | PATCH | `/usuarios/:id/perfil` | Promover ou rebaixar perfil com proteção do próprio acesso e do último administrador |
+| PATCH | `/usuarios/:id/status` | Inativar ou reativar a conta sem apagar o histórico |
 
 ## 11. Segurança
 
@@ -180,6 +181,7 @@ As rotas administrativas exigem JWT válido e perfil `ADMIN`.
 - JWT com segredo obrigatório e mínimo de 32 caracteres em produção.
 - Limitação de tentativas nas rotas de autenticação e recuperação.
 - Verificação de perfil nas rotas administrativas.
+- Verificação do status da conta em toda requisição autenticada, invalidando imediatamente sessões de contas inativadas.
 - Restrição de origens HTTP por `CORS_ORIGIN`.
 - Corpo JSON limitado a 100 KB.
 - Cabeçalhos `nosniff`, bloqueio de iframe e política de referência.

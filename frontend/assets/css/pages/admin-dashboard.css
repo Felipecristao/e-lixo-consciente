@@ -675,6 +675,31 @@
     background: var(--green-light);
 }
 
+.admin-user-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.admin-user-status--ativo {
+    color: #176b3a;
+    background: #dcf7e7;
+}
+
+.admin-user-status--inativo {
+    color: #9f2d24;
+    background: #fde7e7;
+}
+
+.admin-user-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
 .admin-user-action {
     width: auto;
     min-width: 170px;
@@ -713,5 +738,9 @@
     .admin-users-panel .admin-panel__header .btn,
     .admin-user-action {
         width: 100%;
+    }
+
+    .admin-user-actions {
+        min-width: 220px;
     }
 }

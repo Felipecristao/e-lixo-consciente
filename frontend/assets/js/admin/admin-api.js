@@ -31,6 +31,13 @@ export async function alterarPerfilUsuario(id, perfil) {
     });
 }
 
+export async function alterarStatusUsuario(id, ativo) {
+    return await api(`/usuarios/${id}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ ativo })
+    });
+}
+
 export async function buscarPonto(id) {
     return await api(`/admin/pontos/${id}`);
 }

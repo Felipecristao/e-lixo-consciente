@@ -28,6 +28,14 @@ docker compose --env-file .env.production -f docker-compose.prod.yml up -d --bui
 
 O volume `database_data` não é recriado por esse comando, portanto as atualizações normais do código preservam os usuários e pontos cadastrados. Nunca use `docker compose down -v` em produção, pois a opção `-v` remove os volumes.
 
+Quando uma atualização incluir um arquivo novo em `database/migrations`, aplique a migração indicada antes de reconstruir a aplicação. As migrations alteram apenas a estrutura necessária e preservam os registros existentes.
+
+Para a atualização que adiciona a inativação de usuários, execute na raiz do projeto:
+
+```bash
+docker compose --env-file .env.production -f docker-compose.prod.yml exec -T database sh -c 'mariadb -u"$MARIADB_USER" -p"$MARIADB_PASSWORD" "$MARIADB_DATABASE"' < database/migrations/005_usuario_ativo.sql
+```
+
 ## Backup do banco
 
 Crie backups antes de atualizar ou migrar o servidor:

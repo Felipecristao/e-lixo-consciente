@@ -135,6 +135,12 @@ module.exports = {
 
             }
 
+            if (!Number(usuario.ativo)) {
+                return res.status(403).json({
+                    erro: "Esta conta está inativa. Procure um administrador."
+                });
+            }
+
             const token = gerarToken({
 
                 id: usuario.id,

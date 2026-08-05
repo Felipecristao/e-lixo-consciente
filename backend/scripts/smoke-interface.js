@@ -159,11 +159,19 @@ async function executar() {
 
         pagina.once("dialog", (dialogo) => dialogo.accept());
         await linhaUsuario.getByRole("button", { name: "Tornar administrador" }).click();
-        await linhaUsuario.getByRole("button", { name: "Remover acesso" }).waitFor();
+        await linhaUsuario.getByRole("button", { name: "Tornar colaborador" }).waitFor();
 
         pagina.once("dialog", (dialogo) => dialogo.accept());
-        await linhaUsuario.getByRole("button", { name: "Remover acesso" }).click();
+        await linhaUsuario.getByRole("button", { name: "Tornar colaborador" }).click();
         await linhaUsuario.getByRole("button", { name: "Tornar administrador" }).waitFor();
+
+        pagina.once("dialog", (dialogo) => dialogo.accept());
+        await linhaUsuario.getByRole("button", { name: "Inativar usuário" }).click();
+        await linhaUsuario.getByRole("button", { name: "Reativar usuário" }).waitFor();
+
+        pagina.once("dialog", (dialogo) => dialogo.accept());
+        await linhaUsuario.getByRole("button", { name: "Reativar usuário" }).click();
+        await linhaUsuario.getByRole("button", { name: "Inativar usuário" }).waitFor();
 
         conferir(errosPagina.length === 0, `Erros JavaScript no navegador: ${errosPagina.join(" | ")}`);
         console.log("Teste de interface concluído: cadastro, login, navegação e painel administrativo aprovados.");
