@@ -36,6 +36,7 @@ let pontosCarregados = [];
 let usuariosCarregados = [];
 let paginaPontos = 1;
 let paginaUsuarios = 1;
+let resolverConfirmacaoUsuario = null;
 
 const ITENS_POR_PAGINA = 7;
 
@@ -53,6 +54,7 @@ async function iniciarPainel() {
     configurarBotaoAtualizar();
     configurarFiltros();
     configurarGestaoUsuarios();
+    configurarConfirmacaoUsuario();
 
     configurarModal({
         onAprovar: aprovarPonto,
@@ -510,7 +512,13 @@ async function confirmarAlteracaoPerfil(usuario, novoPerfil) {
         ? `tornar ${usuario.nome} administrador`
         : `tornar ${usuario.nome} colaborador`;
 
-    if (!window.confirm(`Deseja realmente ${acao}?`)) return;
+    const confirmado = await solicitarConfirmacaoUsuario({
+        titulo: novoPerfil === "ADMIN" ? "Tornar administrador" : "Tornar colaborador",
+        texto: `Deseja realmente ${acao}?`,
+        textoBotao: novoPerfil === "ADMIN" ? "Confirmar administrador" : "Confirmar colaborador"
+    });
+
+    if (!confirmado) return;
 
     try {
         const resposta = await alterarPerfilUsuario(usuario.id, novoPerfil);
@@ -528,7 +536,16 @@ async function confirmarAlteracaoStatus(usuario, ativo) {
         ? `reativar o acesso de ${usuario.nome}`
         : `inativar o acesso de ${usuario.nome}`;
 
-    if (!window.confirm(`Deseja realmente ${acao}?`)) return;
+    const confirmado = await solicitarConfirmacaoUsuario({
+        titulo: ativo ? "Reativar usuário" : "Inativar usuário",
+        texto: ativo
+            ? `Deseja realmente ${acao}? A conta voltará a acessar a plataforma.`
+            : `Deseja realmente ${acao}? A conta perderá o acesso imediatamente, mas os dados serão preservados.`,
+        textoBotao: ativo ? "Confirmar reativação" : "Confirmar inativação",
+        perigosa: !ativo
+    });
+
+    if (!confirmado) return;
 
     try {
         const resposta = await alterarStatusUsuario(usuario.id, ativo);
@@ -539,6 +556,69 @@ async function confirmarAlteracaoStatus(usuario, ativo) {
     } catch (erro) {
         exibirMensagemUsuarios(erro.message, "erro");
     }
+}
+
+function configurarConfirmacaoUsuario() {
+    const modal = document.getElementById("modalConfirmacaoUsuario");
+    const cancelar = document.getElementById("btnCancelarUsuario");
+    const confirmar = document.getElementById("btnConfirmarUsuario");
+    const fechar = document.getElementById("btnFecharUsuario");
+
+    if (!modal || !cancelar || !confirmar || !fechar) return;
+
+    cancelar.addEventListener("click", () => fecharConfirmacaoUsuario(false));
+    fechar.addEventListener("click", () => fecharConfirmacaoUsuario(false));
+    modal.querySelector("[data-fechar-usuario]")
+        ?.addEventListener("click", () => fecharConfirmacaoUsuario(false));
+    confirmar.addEventListener("click", () => fecharConfirmacaoUsuario(true));
+
+    document.addEventListener("keydown", (evento) => {
+        if (evento.key === "Escape" && modal.classList.contains("is-open")) {
+            fecharConfirmacaoUsuario(false);
+        }
+    });
+}
+
+function solicitarConfirmacaoUsuario({ titulo, texto, textoBotao, perigosa = false }) {
+    const modal = document.getElementById("modalConfirmacaoUsuario");
+    const tituloModal = document.getElementById("tituloConfirmacaoUsuario");
+    const textoModal = document.getElementById("textoConfirmacaoUsuario");
+    const confirmar = document.getElementById("btnConfirmarUsuario");
+    const icone = modal?.querySelector(".admin-confirm-modal__icon");
+
+    if (!modal || !tituloModal || !textoModal || !confirmar || !icone) {
+        return Promise.resolve(false);
+    }
+
+    tituloModal.textContent = titulo;
+    textoModal.textContent = texto;
+    confirmar.textContent = textoBotao;
+    confirmar.className = perigosa ? "btn admin-btn-reject" : "btn btn--primary";
+    icone.className = `admin-confirm-modal__icon admin-confirm-modal__icon--${perigosa ? "reject" : "approve"}`;
+
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    window.setTimeout(() => confirmar.focus(), 80);
+
+    return new Promise((resolve) => {
+        resolverConfirmacaoUsuario = resolve;
+    });
+}
+
+function fecharConfirmacaoUsuario(confirmado) {
+    const modal = document.getElementById("modalConfirmacaoUsuario");
+    if (!modal?.classList.contains("is-open")) return;
+
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+
+    if (!document.querySelector(".admin-modal.is-open")) {
+        document.body.style.overflow = "";
+    }
+
+    resolverConfirmacaoUsuario?.(confirmado);
+    resolverConfirmacaoUsuario = null;
 }
 
 function exibirMensagemUsuarios(texto, tipo) {

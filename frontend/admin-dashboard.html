@@ -381,6 +381,50 @@
 
   </main>
 
+  <div
+    id="modalConfirmacaoUsuario"
+    class="admin-modal admin-confirm-modal"
+    aria-hidden="true"
+  >
+    <div class="admin-modal__overlay" data-fechar-usuario></div>
+
+    <div
+      class="admin-modal__content admin-confirm-modal__content"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tituloConfirmacaoUsuario"
+      aria-describedby="textoConfirmacaoUsuario"
+    >
+      <button
+        type="button"
+        id="btnFecharUsuario"
+        class="admin-modal__close"
+        aria-label="Fechar confirmação"
+      >
+        ×
+      </button>
+
+      <div class="admin-confirm-modal__icon admin-confirm-modal__icon--approve" aria-hidden="true">
+        !
+      </div>
+
+      <div class="admin-confirm-modal__header">
+        <span class="label">Controle de acesso</span>
+        <h2 id="tituloConfirmacaoUsuario">Confirmar alteração</h2>
+        <p id="textoConfirmacaoUsuario"></p>
+      </div>
+
+      <div class="admin-modal__actions admin-confirm-modal__actions">
+        <button type="button" id="btnCancelarUsuario" class="btn btn--outline-green">
+          Cancelar
+        </button>
+        <button type="button" id="btnConfirmarUsuario" class="btn btn--primary">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Detalhes do ponto -->
 
   <div
@@ -669,7 +713,7 @@
 
   <script
     type="module"
-    src="assets/js/admin/admin-dashboard.js?v=20260805-2"
+    src="assets/js/admin/admin-dashboard.js?v=20260805-3"
   ></script>
   <script src="assets/js/perfil-menu.js?v=20260805-1"></script>
 

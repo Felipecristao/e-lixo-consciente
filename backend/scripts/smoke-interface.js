@@ -187,20 +187,20 @@ async function executar() {
             .locator("#adminUsuariosTabela tr")
             .filter({ hasText: emailUsuario });
 
-        pagina.once("dialog", (dialogo) => dialogo.accept());
         await linhaUsuario.getByRole("button", { name: "Tornar administrador" }).click();
+        await pagina.getByRole("button", { name: "Confirmar administrador" }).click();
         await linhaUsuario.getByRole("button", { name: "Tornar colaborador" }).waitFor();
 
-        pagina.once("dialog", (dialogo) => dialogo.accept());
         await linhaUsuario.getByRole("button", { name: "Tornar colaborador" }).click();
+        await pagina.getByRole("button", { name: "Confirmar colaborador" }).click();
         await linhaUsuario.getByRole("button", { name: "Tornar administrador" }).waitFor();
 
-        pagina.once("dialog", (dialogo) => dialogo.accept());
         await linhaUsuario.getByRole("button", { name: "Inativar usuário" }).click();
+        await pagina.getByRole("button", { name: "Confirmar inativação" }).click();
         await linhaUsuario.getByRole("button", { name: "Reativar usuário" }).waitFor();
 
-        pagina.once("dialog", (dialogo) => dialogo.accept());
         await linhaUsuario.getByRole("button", { name: "Reativar usuário" }).click();
+        await pagina.getByRole("button", { name: "Confirmar reativação" }).click();
         await linhaUsuario.getByRole("button", { name: "Inativar usuário" }).waitFor();
 
         conferir(errosPagina.length === 0, `Erros JavaScript no navegador: ${errosPagina.join(" | ")}`);
