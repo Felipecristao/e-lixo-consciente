@@ -16,7 +16,7 @@ import {
     abrirModal,
     fecharModal,
     preencherModal
-} from "./admin-modal.js";
+} from "./admin-modal.js?v=20260805-1";
 
 import {
     confirmarAprovacao,

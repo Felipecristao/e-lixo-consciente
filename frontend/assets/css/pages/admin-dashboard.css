@@ -366,6 +366,30 @@
     word-break: break-word;
 }
 
+.admin-detail-card small {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted-text);
+    font-size: 0.84rem;
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.admin-detail-location {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.admin-detail-map-link {
+    flex: 0 0 auto;
+    padding: 10px 16px;
+    border: 1px solid var(--green);
+    border-radius: 999px;
+    text-decoration: none;
+}
+
 .admin-materials-list {
     display: flex;
     flex-wrap: wrap;
@@ -484,6 +508,11 @@
 
     .admin-detail-card--full {
         grid-column: auto;
+    }
+
+    .admin-detail-location {
+        align-items: flex-start;
+        flex-direction: column;
     }
 }
 

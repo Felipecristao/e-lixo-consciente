@@ -86,6 +86,13 @@ export function preencherModal(ponto) {
     const statusTexto = exclusaoPendente
         ? "EXCLUSAO_PENDENTE"
         : escaparHTML(ponto.status || "-");
+    const endereco = montarEndereco(ponto);
+    const materiais = Array.isArray(ponto.materiais) ? ponto.materiais : [];
+    const telefone = ponto.telefone
+        ? escaparHTML(ponto.telefone)
+        : "Não informado";
+    const telefoneLink = String(ponto.telefone || "").replace(/\D/g, "");
+    const site = normalizarSite(ponto.site);
 
     document.getElementById("modalTitulo").textContent =
         ponto.nome || "Ponto de coleta";
@@ -98,26 +105,70 @@ export function preencherModal(ponto) {
 
     document.getElementById("modalConteudo").innerHTML = `
         <div class="admin-detail-grid">
-
             <div class="admin-detail-card">
                 <span>Tipo</span>
-                <strong>${escaparHTML(ponto.tipo || "-")}</strong>
+                <strong>${escaparHTML(ponto.tipo || "Não informado")}</strong>
             </div>
 
             <div class="admin-detail-card">
-                <span>Cidade</span>
-                <strong>${escaparHTML(ponto.cidade || "-")}</strong>
+                <span>Enviado por</span>
+                <strong>${escaparHTML(ponto.usuario || "Não identificado")}</strong>
+                <small>${escaparHTML(ponto.usuario_email || "E-mail não informado")}</small>
+            </div>
+
+            <div class="admin-detail-card admin-detail-card--full admin-detail-location">
+                <div>
+                    <span>Endereço completo</span>
+                    <strong>${escaparHTML(endereco || "Não informado")}</strong>
+                </div>
+                ${criarLinkLocalizacao(ponto, endereco)}
+            </div>
+
+            <div class="admin-detail-card">
+                <span>Telefone</span>
+                ${telefoneLink ? `<a href="tel:${telefoneLink}">${telefone}</a>` : `<strong>${telefone}</strong>`}
+            </div>
+
+            <div class="admin-detail-card">
+                <span>Horário de funcionamento</span>
+                <strong>${escaparHTML(ponto.horario_funcionamento || "Não informado")}</strong>
+            </div>
+
+            <div class="admin-detail-card">
+                <span>Data do cadastro</span>
+                <strong>${formatarData(ponto.data_cadastro)}</strong>
+            </div>
+
+            <div class="admin-detail-card">
+                <span>Site</span>
+                ${site ? `<a href="${escaparHTML(site)}" target="_blank" rel="noopener noreferrer">Abrir site do ponto</a>` : "<strong>Não informado</strong>"}
             </div>
 
             <div class="admin-detail-card admin-detail-card--full">
-                <span>Descricao</span>
-                <p>${escaparHTML(ponto.descricao || "Nao informada.")}</p>
+                <span>Materiais aceitos</span>
+                <div class="admin-materials-list">
+                    ${materiais.length
+                        ? materiais.map((material) => `<span class="admin-material-chip">${escaparHTML(material.nome)}</span>`).join("")
+                        : "<p>Nenhum material informado.</p>"}
+                </div>
             </div>
 
             <div class="admin-detail-card admin-detail-card--full">
-                <span>Observacoes</span>
+                <span>Descrição</span>
+                <p>${escaparHTML(ponto.descricao || "Não informada.")}</p>
+            </div>
+
+            <div class="admin-detail-card admin-detail-card--full">
+                <span>Observações</span>
                 <p>${escaparHTML(ponto.observacoes || "Nenhuma.")}</p>
             </div>
+
+            ${ponto.motivo_rejeicao ? `
+                <div class="admin-detail-card admin-detail-card--full admin-rejection-box">
+                    <span>Motivo da rejeição</span>
+                    <p>${escaparHTML(ponto.motivo_rejeicao)}</p>
+                </div>
+            ` : ""}
 
             ${
                 exclusaoPendente
@@ -134,6 +185,58 @@ export function preencherModal(ponto) {
     `;
 
     configurarBotoesAcaoModal(exclusaoPendente);
+}
+
+function montarEndereco(ponto) {
+    const linhaPrincipal = [ponto.rua || ponto.endereco, ponto.numero]
+        .filter(Boolean)
+        .join(", ");
+    const localidade = [ponto.bairro, ponto.cidade, ponto.estado]
+        .filter(Boolean)
+        .join(" - ");
+
+    return [linhaPrincipal, localidade, ponto.cep]
+        .filter(Boolean)
+        .join(" · ");
+}
+
+function criarLinkLocalizacao(ponto, endereco) {
+    const latitude = Number(ponto.latitude);
+    const longitude = Number(ponto.longitude);
+    const possuiCoordenadas = ponto.latitude !== null && ponto.latitude !== "" &&
+        ponto.longitude !== null && ponto.longitude !== "" &&
+        Number.isFinite(latitude) && Number.isFinite(longitude);
+    const destino = possuiCoordenadas
+        ? `${latitude},${longitude}`
+        : endereco;
+
+    if (!destino) return "";
+
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destino)}`;
+    return `<a class="admin-detail-map-link" href="${url}" target="_blank" rel="noopener noreferrer">Conferir no mapa</a>`;
+}
+
+function normalizarSite(valor) {
+    if (!valor) return "";
+
+    try {
+        const url = new URL(/^https?:\/\//i.test(valor) ? valor : `https://${valor}`);
+        return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+    } catch {
+        return "";
+    }
+}
+
+function formatarData(valor) {
+    if (!valor) return "Não informada";
+
+    const data = new Date(valor);
+    if (Number.isNaN(data.getTime())) return "Não informada";
+
+    return escaparHTML(new Intl.DateTimeFormat("pt-BR", {
+        dateStyle: "short",
+        timeStyle: "short"
+    }).format(data));
 }
 
 function configurarBotoesAcaoModal(exclusaoPendente) {

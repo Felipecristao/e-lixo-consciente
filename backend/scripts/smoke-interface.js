@@ -186,6 +186,37 @@ async function executar() {
         conferir(await pagina.locator("#paginacaoPontos:not([hidden])").count(), "Paginação dos pontos não apareceu");
         conferir(await pagina.locator("#adminUsuariosTabela tr").count() === 7, "Tabela de usuários não respeitou o limite por página");
         conferir(await pagina.locator("#paginacaoUsuarios:not([hidden])").count(), "Paginação dos usuários não apareceu");
+
+        await pagina.route("**/api/admin/pontos/9000", (rota) => rota.fulfill({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify({
+                ...pontosPaginacao[0],
+                descricao: "Descrição conferida no teste",
+                rua: "Rua Tocantins",
+                numero: "800",
+                bairro: "Centro",
+                estado: "PR",
+                cep: "85501-010",
+                latitude: -26.2295,
+                longitude: -52.6716,
+                telefone: "(46) 3220-3000",
+                horario_funcionamento: "Segunda a sexta, das 8h às 18h",
+                site: "https://example.invalid",
+                observacoes: "Recebe materiais na recepção.",
+                usuario_email: emailAdmin,
+                materiais: [{ id: 1, nome: "Baterias" }, { id: 2, nome: "Celulares" }]
+            })
+        }));
+
+        await pagina.locator("#adminPontosTabela .btnVisualizar").first().click();
+        await pagina.getByText("Endereço completo", { exact: true }).waitFor();
+        conferir(await pagina.getByText("Rua Tocantins, 800 · Centro - Pato Branco - PR · 85501-010", { exact: true }).count(), "Modal não exibiu o endereço completo");
+        conferir(await pagina.getByText("Segunda a sexta, das 8h às 18h", { exact: true }).count(), "Modal não exibiu o horário");
+        conferir(await pagina.getByText("Baterias", { exact: true }).count(), "Modal não exibiu os materiais");
+        conferir(await pagina.getByText(emailAdmin, { exact: true }).count(), "Modal não exibiu o responsável pelo cadastro");
+        await pagina.locator("#btnFecharModalRodape").click();
+        await pagina.unroute("**/api/admin/pontos/9000");
         await pagina.unroute("**/api/admin/pontos");
 
         await pagina.fill("#filtroUsuarios", emailUsuario);
