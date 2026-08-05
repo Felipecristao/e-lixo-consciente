@@ -182,6 +182,8 @@ async function executar() {
         await pagina.waitForSelector("#adminPontosTabela");
         await pagina.waitForSelector("#adminUsuariosTabela");
         conferir(await pagina.getByText("Painel Administrativo", { exact: true }).count(), "Painel administrativo não abriu");
+        const alturaCabecalhoAdmin = await pagina.locator(".dashboard-header__inner").evaluate((elemento) => elemento.getBoundingClientRect().height);
+        conferir(Math.abs(alturaCabecalhoAdmin - 64) < 1, "Cabeçalho administrativo não possui a altura padrão do site");
         conferir(await pagina.locator("#adminPontosTabela tr").count() === 7, "Tabela de pontos não respeitou o limite por página");
         conferir(await pagina.locator("#paginacaoPontos:not([hidden])").count(), "Paginação dos pontos não apareceu");
         conferir(await pagina.locator("#adminUsuariosTabela tr").count() === 7, "Tabela de usuários não respeitou o limite por página");
