@@ -1114,7 +1114,7 @@ function normalizarTermosEndereco(valor) {
         .filter((termo) => termo && !palavrasIgnoradas.has(termo));
 }
 
-function selecionarLocalizacaoMapa(localizacao) {
+function selecionarLocalizacaoMapa(localizacao, zoom = 14) {
     ocultarResultadosLocalizacao();
 
     pontosPublicos.forEach((ponto) => {
@@ -1135,7 +1135,11 @@ function selecionarLocalizacaoMapa(localizacao) {
         { radius: 9, color: "#087f5b", weight: 3, fillColor: "#ffffff", fillOpacity: 1 }
     ).addTo(mapa).bindPopup(`<strong>Local pesquisado</strong><br>${escaparHTML(localizacao.titulo)}<br>${escaparHTML(localizacao.detalhes)}`);
 
-    mapa.setView([localizacao.latitude, localizacao.longitude], 14);
+    mapa.flyTo(
+        [localizacao.latitude, localizacao.longitude],
+        zoom,
+        { animate: true, duration: 0.7 }
+    );
     marcadorLocalizacaoBusca.openPopup();
     exibirMensagemMapa(`Pontos ordenados pela distância de ${localizacao.titulo}, ${localizacao.cidade}.`, "sucesso");
 }
@@ -1224,7 +1228,7 @@ function localizarUsuario(botao) {
                     localizacao.enderecoPesquisa;
             }
 
-            selecionarLocalizacaoMapa(localizacao);
+            selecionarLocalizacaoMapa(localizacao, 16);
 
             botao.disabled = false;
             botao.textContent =
