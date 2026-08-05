@@ -56,14 +56,17 @@ async function executar() {
         const errosPagina = [];
         pagina.on("pageerror", (erro) => errosPagina.push(erro.message));
 
-        await pagina.goto(`${site}/cadastro.html`, { waitUntil: "domcontentloaded" });
+        const respostaLegada = await pagina.goto(`${site}/login.html`, { waitUntil: "domcontentloaded" });
+        conferir(respostaLegada?.url().endsWith("/login"), "URL antiga de login não foi redirecionada");
+
+        await pagina.goto(`${site}/cadastro`, { waitUntil: "domcontentloaded" });
         await pagina.fill("#nome", "Usuário da interface");
         await pagina.fill("#email", emailUsuario);
         await pagina.fill("#senha", senhaUsuario);
         await pagina.fill("#confirmarSenha", senhaUsuario);
         await pagina.check("#aceiteTermos");
         await pagina.click("#btnCadastrar");
-        await pagina.waitForURL(/index\.html$/, { timeout: 15000 })
+        await pagina.waitForURL((url) => url.pathname === "/", { timeout: 15000 })
             .catch(async () => {
                 const mensagem = await pagina.locator("#cadastroMensagem").textContent();
                 throw new Error(`Cadastro não abriu a página inicial; destino atual: ${pagina.url()}; mensagem: ${mensagem?.trim() || "vazia"}`);
@@ -77,40 +80,40 @@ async function executar() {
         await pagina.waitForSelector(".profile-menu__trigger");
         conferir(await pagina.getByText("Meus pontos de coleta", { exact: true }).count(), "Atalho do usuário não apareceu na home");
 
-        await pagina.goto(`${site}/como-funciona.html`, { waitUntil: "domcontentloaded" });
+        await pagina.goto(`${site}/como-funciona`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector(".profile-menu__trigger");
         conferir(await pagina.getByText("Meus pontos de coleta", { exact: true }).count(), "Sessão não foi mantida em Como Funciona");
 
-        await pagina.goto(`${site}/mapa.html`, { waitUntil: "domcontentloaded" });
+        await pagina.goto(`${site}/mapa`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector("#map");
         conferir(await pagina.locator("#mapPointsList").count(), "Lista do mapa não foi carregada");
 
-        await pagina.goto(`${site}/dashboard.html`, { waitUntil: "domcontentloaded" });
+        await pagina.goto(`${site}/meus-pontos`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector("#meusPontosContainer");
         conferir(await pagina.getByText("Meus pontos sugeridos", { exact: true }).count(), "Painel do usuário não abriu");
 
         await pagina.evaluate(() => localStorage.clear());
-        await pagina.goto(`${site}/login.html`, { waitUntil: "domcontentloaded" });
+        await pagina.goto(`${site}/login`, { waitUntil: "domcontentloaded" });
         await pagina.fill("#email", emailUsuario);
         await pagina.fill("#senha", senhaUsuario);
         await pagina.click("#loginForm button[type='submit']");
-        await pagina.waitForURL(/index\.html$/, { timeout: 15000 })
+        await pagina.waitForURL((url) => url.pathname === "/", { timeout: 15000 })
             .catch(() => {
                 throw new Error(`Login do usuário não abriu a página inicial; destino atual: ${pagina.url()}`);
             });
 
         await pagina.evaluate(() => localStorage.clear());
-        await pagina.goto(`${site}/login.html`, { waitUntil: "domcontentloaded" });
+        await pagina.goto(`${site}/login`, { waitUntil: "domcontentloaded" });
         await pagina.fill("#email", emailAdmin);
         await pagina.fill("#senha", senhaAdmin);
         await pagina.click("#loginForm button[type='submit']");
-        await pagina.waitForURL(/index\.html$/, { timeout: 15000 })
+        await pagina.waitForURL((url) => url.pathname === "/", { timeout: 15000 })
             .catch(() => {
                 throw new Error(`Login administrativo não abriu a página inicial; destino atual: ${pagina.url()}`);
             });
         conferir(await pagina.getByText("Painel administrador", { exact: true }).count(), "Atalho administrativo não apareceu");
 
-        await pagina.goto(`${site}/admin-dashboard.html`, { waitUntil: "domcontentloaded" });
+        await pagina.goto(`${site}/painel-admin`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector("#adminPontosTabela");
         await pagina.waitForSelector("#adminUsuariosTabela");
         conferir(await pagina.getByText("Painel Administrativo", { exact: true }).count(), "Painel administrativo não abriu");

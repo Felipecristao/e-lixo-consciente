@@ -109,7 +109,50 @@ app.use("/api", (req, res, next) => {
     next();
 });
 
-app.use(express.static(path.join(__dirname, "../frontend")));
+const pastaFrontend = path.join(__dirname, "../frontend");
+const paginasPublicas = {
+    "/": "index.html",
+    "/login": "login.html",
+    "/cadastro": "cadastro.html",
+    "/mapa": "mapa.html",
+    "/como-funciona": "como-funciona.html",
+    "/sobre": "sobre.html",
+    "/meus-pontos": "dashboard.html",
+    "/perfil": "perfil.html",
+    "/painel-admin": "admin-dashboard.html",
+    "/cadastrar-ponto": "cadastro-ponto.html",
+    "/esqueci-senha": "esqueci-senha.html",
+    "/redefinir-senha": "redefinir-senha.html",
+    "/politica-de-privacidade": "politica-privacidade.html",
+    "/termos-de-uso": "termos-uso.html"
+};
+const rotasAntigas = Object.fromEntries(
+    Object.entries(paginasPublicas).map(([rota, arquivo]) => [
+        `/${arquivo}`,
+        rota
+    ])
+);
+
+app.use((req, res, next) => {
+    if (req.method !== "GET" || !rotasAntigas[req.path]) {
+        return next();
+    }
+
+    const inicioConsulta = req.originalUrl.indexOf("?");
+    const consulta = inicioConsulta >= 0
+        ? req.originalUrl.slice(inicioConsulta)
+        : "";
+
+    return res.redirect(301, rotasAntigas[req.path] + consulta);
+});
+
+Object.entries(paginasPublicas).forEach(([rota, arquivo]) => {
+    app.get(rota, (req, res) => {
+        res.sendFile(path.join(pastaFrontend, arquivo));
+    });
+});
+
+app.use(express.static(pastaFrontend));
 
 /* Rotas */
 

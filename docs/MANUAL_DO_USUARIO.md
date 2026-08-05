@@ -4,6 +4,8 @@
 
 O endereço público planejado é `https://elixoconsciente.com.br`. O site pode ser utilizado para consultar pontos sem cadastro. Para sugerir ou acompanhar pontos, é necessário criar uma conta.
 
+As páginas usam endereços simplificados, sem a extensão `.html`, como `/login`, `/mapa` e `/meus-pontos`.
+
 ## 2. Encontrar um ponto de coleta
 
 1. Na página inicial, informe rua, bairro, cidade ou CEP.

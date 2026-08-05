@@ -33,7 +33,11 @@ O projeto foi desenvolvido por alunos do curso de Tecnologia em Análise e Desen
 | Infraestrutura | Docker, Docker Compose e Caddy |
 | HTTPS | Certificados automáticos gerenciados pelo Caddy |
 
-## 4. Arquitetura
+## 4. URLs públicas
+
+As páginas utilizam endereços amigáveis, como `/login`, `/mapa`, `/meus-pontos` e `/painel-admin`. Endereços antigos terminados em `.html` são redirecionados permanentemente para manter a compatibilidade.
+
+## 5. Arquitetura
 
 ```mermaid
 flowchart LR
@@ -48,7 +52,7 @@ flowchart LR
 
 Em produção, apenas as portas 80 e 443 são publicadas. Aplicação e banco comunicam-se por uma rede Docker interna, e o MariaDB não possui porta pública.
 
-## 5. Organização do repositório
+## 6. Organização do repositório
 
 ```text
 backend/                    API, regras de negócio, autenticação e testes
@@ -61,7 +65,7 @@ docker-compose.yml          banco para desenvolvimento local
 Dockerfile                  imagem da aplicação
 ```
 
-## 6. Perfis e regras de negócio
+## 7. Perfis e regras de negócio
 
 ### Visitante
 
@@ -88,13 +92,13 @@ Dockerfile                  imagem da aplicação
 - Lista usuários e gerencia perfis administrativos por rota protegida.
 - Não pode rebaixar a própria conta nem remover o último administrador.
 
-## 7. Cadastro de ponto
+## 8. Cadastro de ponto
 
 São obrigatórios: nome, tipo, CEP, rua, número, bairro, cidade, estado, telefone, horário de funcionamento e ao menos um material aceito. O nome é normalizado para letras maiúsculas. Coordenadas, descrição, site e observações complementam o cadastro.
 
 Os horários são coletados por seleção estruturada de dias e faixas de funcionamento no frontend, reduzindo preenchimentos incompletos. O backend também rejeita telefone, horário ou materiais ausentes.
 
-## 8. Banco de dados
+## 9. Banco de dados
 
 ### Entidades
 
@@ -120,7 +124,7 @@ erDiagram
 
 Os status de ponto são `PENDENTE`, `APROVADO` e `REJEITADO`. A solicitação de exclusão possui os estados `NENHUMA` e `PENDENTE`.
 
-## 9. API
+## 10. API
 
 Todas as rotas utilizam o prefixo `/api`.
 
@@ -170,7 +174,7 @@ As rotas administrativas exigem JWT válido e perfil `ADMIN`.
 | GET | `/usuarios/:id` | Consultar um usuário |
 | PATCH | `/usuarios/:id/perfil` | Promover ou rebaixar perfil com proteção do próprio acesso e do último administrador |
 
-## 10. Segurança
+## 11. Segurança
 
 - Senhas armazenadas com hash bcrypt.
 - JWT com segredo obrigatório e mínimo de 32 caracteres em produção.
@@ -187,7 +191,7 @@ As rotas administrativas exigem JWT válido e perfil `ADMIN`.
 
 O token de sessão permanece no `localStorage`. Para um serviço de maior risco, recomenda-se migrar a autenticação para cookie `HttpOnly`, `Secure` e `SameSite`, com proteção CSRF. A recuperação gera tokens válidos, mas o envio real por e-mail ainda precisa de integração com um provedor transacional.
 
-## 11. Execução local
+## 12. Execução local
 
 ```bash
 docker compose --env-file .env up -d
@@ -198,7 +202,7 @@ npm start
 
 Acesse `http://localhost:3001` e valide a saúde em `http://localhost:3001/api/health`.
 
-## 12. Produção
+## 13. Produção
 
 Copie `.env.production.example` para `.env.production`, preencha valores seguros e execute:
 
@@ -208,7 +212,7 @@ docker compose --env-file .env.production -f docker-compose.prod.yml up -d --bui
 
 As orientações completas estão em [`deploy/README.md`](../deploy/README.md).
 
-## 13. Verificação
+## 14. Verificação
 
 ```bash
 cd backend
@@ -220,7 +224,7 @@ npm run smoke:ui
 
 Na revisão de 5 de agosto de 2026, 27 arquivos JavaScript foram validados, os testes unitários, de API e de interface passaram, e o `npm audit` não encontrou vulnerabilidades conhecidas nas dependências de produção.
 
-## 14. Evoluções sugeridas
+## 15. Evoluções sugeridas
 
 - Integração com serviço de e-mail transacional.
 - Ampliar os testes de integração e ponta a ponta para mais navegadores.
