@@ -1,0 +1,36 @@
+{
+  "name": "backend",
+  "version": "1.1.0",
+  "description": "Backend - E-Lixo Consciente",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "check": "node scripts/check.js",
+    "smoke": "node scripts/smoke-fluxos.js",
+    "smoke:ui": "node scripts/smoke-interface.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "jwt",
+    "mysql",
+    "elixo"
+  ],
+  "author": "Christian Felipe",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.23.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "playwright": "^1.62.1"
+  }
+}

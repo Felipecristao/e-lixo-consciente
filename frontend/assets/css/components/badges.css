@@ -1,0 +1,91 @@
+/* Badges */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4px 12px;
+
+    border-radius: var(--radius-full);
+
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.badge--open {
+    color: var(--white);
+    background: #22c55e;
+}
+
+.badge--closed {
+    color: var(--white);
+    background: #6b7280;
+}
+
+.dashboard-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px 12px;
+
+    border-radius: var(--radius-full);
+
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.dashboard-status--pending {
+    color: #936000;
+    background: #fff1c7;
+}
+
+.dashboard-status--approved {
+    color: #146b42;
+    background: #dff5e9;
+}
+
+.dashboard-status--rejected {
+    color: #a63229;
+    background: #ffe5e1;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    margin-bottom: 16px;
+}
+
+.tag {
+    padding: 4px 12px;
+
+    border-radius: var(--radius-full);
+
+    background: var(--green-light);
+    color: var(--green-mid);
+
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    flex-shrink: 0;
+
+    color: #f59e0b;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.rating__reviews {
+    color: var(--muted-text);
+    font-weight: 400;
+}

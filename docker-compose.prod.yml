@@ -1,0 +1,77 @@
+services:
+  database:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Defina DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: elixo
+      MARIADB_USER: ${DB_USER:?Defina DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD}
+    volumes:
+      - database_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.prod.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -u$$MARIADB_USER -p$$MARIADB_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    networks:
+      - internal
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:?Defina DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD}
+      DB_NAME: elixo
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      CORS_ORIGIN: https://${DOMAIN:?Defina DOMAIN}
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - internal
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?Defina DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:?Defina ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - internal
+
+networks:
+  internal:
+
+volumes:
+  database_data:
+  caddy_data:
+  caddy_config:

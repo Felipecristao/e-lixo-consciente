@@ -1,0 +1,168 @@
+/* Footer */
+
+.footer {
+    color: var(--white);
+    background: #0d2218;
+}
+
+.footer__top {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px;
+
+    padding: 56px 0 48px;
+}
+
+/* Marca */
+
+.footer__logo-text {
+    color: var(--white) !important;
+}
+
+.footer__logo-text span {
+    color: #4ade80 !important;
+}
+
+.footer__brand-desc {
+    margin: 16px 0 20px;
+
+    color: rgba(255, 255, 255, 0.5);
+
+    font-family: "Inter", sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.7;
+}
+
+/* Redes sociais */
+
+.social-links {
+    display: flex;
+    gap: 12px;
+}
+
+.social-link {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    border-radius: 50%;
+
+    transition: background-color 0.2s ease;
+}
+
+.social-link:hover {
+    background: var(--green);
+}
+
+.social-link svg {
+    color: var(--white);
+}
+
+/* Colunas */
+
+.footer__col-title {
+    margin-bottom: 16px;
+
+    color: var(--white);
+
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer__links a {
+    color: rgba(255, 255, 255, 0.5);
+
+    font-family: "Inter", sans-serif;
+    font-size: 0.875rem;
+
+    transition: color 0.2s ease;
+}
+
+.footer__links a:hover {
+    color: #4ade80;
+}
+
+/* Contato */
+
+.footer__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer__contact li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    color: rgba(255, 255, 255, 0.5);
+
+    font-family: "Inter", sans-serif;
+    font-size: 0.875rem;
+}
+
+.footer__contact svg {
+    flex-shrink: 0;
+
+    margin-top: 2px;
+
+    color: #4ade80;
+}
+
+/* Rodapé inferior */
+
+.footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    padding: 24px 0;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer__copy,
+.footer__tagline {
+    color: rgba(255, 255, 255, 0.3);
+
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.75rem;
+}
+
+.footer__tagline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer__tagline svg {
+    color: #4ade80;
+}
+
+/* Responsivo */
+
+@media (max-width: 1024px) {
+    .footer__top {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer__top {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}

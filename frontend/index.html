@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Lixo Consciente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="home-page">
+
+<!-- Cabeçalho -->
+<header class="header">
+  <div class="container">
+    <div class="header__inner">
+      <a href="#" class="logo">
+        <div class="logo__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <span class="logo__text">E-Lixo <span>Consciente</span></span>
+      </a>
+
+      <nav>
+        <ul class="nav">
+          <li><a href="mapa.html">Pontos de Coleta</a></li>
+          <li><a href="como-funciona.html">Como Funciona</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+        </ul>
+      </nav>
+
+<div class="header__actions">
+
+  <a
+    href="login.html"
+    class="btn header-login-btn"
+  >
+    Entrar
+  </a>
+
+  <a
+    href="cadastro.html"
+    class="btn btn--primary header-register-btn"
+  >
+    Criar conta
+  </a>
+
+  <button
+    type="button"
+    class="mobile-menu-btn"
+    id="menu-toggle"
+    aria-label="Abrir menu"
+    aria-expanded="false"
+  >
+    <svg
+      id="menu-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+</div>
+
+  <div id="mobile-menu">
+    <a href="mapa.html">Pontos de Coleta</a>
+    <a href="como-funciona.html">Como Funciona</a>
+    <a href="sobre.html">Sobre</a>
+    <button class="btn btn--primary" style="justify-content:center;border-radius:1rem;padding:.75rem">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Cadastrar Ponto
+    </button>
+  </div>
+</header>
+
+
+<!-- Apresentação -->
+<section class="hero">
+  <div class="hero__decor hero__decor--1"></div>
+  <div class="hero__decor hero__decor--2"></div>
+
+  <div class="container">
+    <div class="hero__content">
+      <div class="hero__badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        Descarte consciente de eletrônicos
+      </div>
+
+      <h1 class="hero__title">
+        Encontre onde descartar<br>
+        <em>resíduos eletrônicos</em><br>
+        perto de você
+      </h1>
+
+      <p class="hero__desc">
+        Conectamos cidadãos a pontos de coleta de e-lixo em todo o Brasil.
+        Simples, gratuito e comprometido com o meio ambiente.
+      </p>
+
+      <div class="search-bar">
+        <div class="search-bar__input-wrap">
+          <svg class="search-bar__icon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <input class="search-bar__input" id="search" type="text" placeholder="Rua, bairro, cidade ou CEP..." />
+        </div>
+        <button class="search-bar__btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Buscar
+        </button>
+      </div>
+
+      <div class="quick-cities">
+        <button class="quick-city">São Paulo, SP</button>
+        <button class="quick-city">Rio de Janeiro, RJ</button>
+        <button class="quick-city">Belo Horizonte, MG</button>
+        <button class="quick-city">Curitiba, PR</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-bar__grid">
+        <div class="stat"><div class="stat__value" id="totalPontos">0</div><div class="stat__label">Pontos cadastrados</div></div>
+        <div class="stat"><div class="stat__value" id="totalMunicipios">0</div><div class="stat__label">Municípios atendidos</div></div>
+        <div class="stat"><div class="stat__value" id="totalDescartes">0</div><div class="stat__label">Descartes realizados</div></div>
+        <div class="stat"><div class="stat__value" id="totalResiduos">0 t</div><div class="stat__label">Resíduos coletados</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Categorias de materiais -->
+<section class="section section--bg">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="label">Em destaque</span>
+        <h2 class="section-title">Pontos de coleta próximos</h2>
+      </div>
+      <button
+        type="button"
+        class="btn btn--outline-green"
+        id="btnVerMapaGeral"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+        </svg>
+        Ver no mapa
+      </button>
+    </div>
+
+    <div class="points-carousel" id="pointsCarousel">
+      <button
+        type="button"
+        class="points-carousel__arrow points-carousel__arrow--prev"
+        id="pontosAnterior"
+        aria-label="Ver pontos anteriores"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+
+      <div class="points-grid" id="pointsContainer">
+        <p class="body-text">Carregando pontos de coleta...</p>
+      </div>
+
+      <button
+        type="button"
+        class="points-carousel__arrow points-carousel__arrow--next"
+        id="pontosProximo"
+        aria-label="Ver próximos pontos"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<!-- Pontos de coleta em destaque -->
+<section class="section section--white">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="label">Categorias</span>
+        <h2 class="section-title">O que você deseja descartar?</h2>
+      </div>
+    </div>
+
+    <div class="categories-grid" id="categoriasContainer">
+      <div class="cat-card cat-card--green">
+        <div class="cat-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+        </div>
+        <div class="cat-card__label">Celulares</div>
+      </div>
+
+      <div class="cat-card cat-card--blue">
+        <div class="cat-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/>
+          </svg>
+        </div>
+        <div class="cat-card__label">Pilhas e Baterias</div>
+      </div>
+
+      <div class="cat-card cat-card--green">
+        <div class="cat-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <div class="cat-card__label">Notebooks</div>
+        </div>
+
+      <div class="cat-card cat-card--blue">
+        <div class="cat-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <div class="cat-card__label">Monitores</div>
+      </div>
+
+      <div class="cat-card cat-card--green">
+        <div class="cat-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/>
+            <path d="M15 2v2M9 2v2M15 20v2M9 20v2M2 15h2M2 9h2M20 15h2M20 9h2"/>
+          </svg>
+        </div>
+        <div class="cat-card__label">Computadores</div>
+      </div>
+
+      <div class="cat-card cat-card--blue">
+        <div class="cat-card__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <polyline points="6 9 6 2 18 2 18 9"/>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+            <rect x="6" y="14" width="12" height="8"/>
+          </svg>
+        </div>
+        <div class="cat-card__label">Impressoras</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Como funciona -->
+<section class="section section--bg">
+  <div class="container">
+    <div class="how-header">
+      <span class="label">Simples assim</span>
+      <h2 class="section-title">Como funciona</h2>
+      <p class="body-text">Em três passos simples você descarta seu e-lixo de forma responsável e segura.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step__icon-wrap">
+          <div class="step__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <span class="step__num">1</span>
+        </div>
+        <div class="step__title">Pesquise</div>
+        <p class="step__desc">Digite sua cidade ou CEP e encontre os pontos de coleta mais próximos de você em segundos.</p>
+      </div>
+
+      <div class="step">
+        <div class="step__icon-wrap">
+          <div class="step__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <span class="step__num">2</span>
+        </div>
+        <div class="step__title">Localize</div>
+        <p class="step__desc">Veja no mapa os pontos disponíveis, horários de funcionamento, tipos de resíduos aceitos e avaliações da comunidade.</p>
+      </div>
+
+      <div class="step">
+        <div class="step__icon-wrap">
+          <div class="step__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/>
+              <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/>
+            </svg>
+          </div>
+          <span class="step__num">3</span>
+        </div>
+        <div class="step__title">Descarte</div>
+        <p class="step__desc">Leve seus resíduos eletrônicos ao ponto escolhido e contribua para um planeta mais sustentável.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Chamada para participação -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-box__decor cta-box__decor--1"></div>
+      <div class="cta-box__decor cta-box__decor--2"></div>
+      <div class="cta-box__inner">
+        <div>
+          <div class="cta-box__badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="#bae6fd" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span class="cta-box__badge-label">Cadastro gratuito</span>
+          </div>
+          <h2 class="cta-box__title">Conhece um ponto de coleta que não está no mapa?</h2>
+          <p class="cta-box__desc">Ajude a comunidade! Cadastre novos pontos de coleta e colabore para que mais pessoas possam descartar e-lixo corretamente em todo o Brasil.</p>
+        </div>
+        <div class="cta-box__btns">
+          <button class="btn btn--white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Cadastrar Ponto de Coleta
+          </button>
+          <button class="btn btn--ghost-white">
+            Saiba mais
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Rodapé -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+
+      <div>
+        <div class="logo">
+          <div class="logo__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+            </svg>
+          </div>
+          <span class="logo__text footer__logo-text">E-Lixo <span>Consciente</span></span>
+        </div>
+        <p class="footer__brand-desc">Plataforma colaborativa para localização e cadastro de pontos de coleta de resíduos eletrônicos no Brasil.</p>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="#" class="social-link" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="#" class="social-link" aria-label="YouTube">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer__col-title">Plataforma</div>
+        <ul class="footer__links">
+          <li><a href="#">Mapa de Pontos</a></li>
+          <li><a href="#">Cadastrar Ponto</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer__col-title">Institucional</div>
+        <ul class="footer__links">
+          <li><a href="#">Sobre nós</a></li>
+          <li><a href="#">Como funciona</a></li>
+          <li><a href="politica-privacidade.html">Política de Privacidade</a></li>
+          <li><a href="termos-uso.html">Termos de Uso</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer__col-title">Contato</div>
+        <ul class="footer__contact">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            contato@elixoconsciente.com.br
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.11h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.03z"/></svg>
+            (47) 99745-8390
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Pato Branco, PR - Brasil
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <span class="footer__copy">© 2025 E-Lixo Consciente. Todos os direitos reservados.</span>
+      <div class="footer__tagline">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+          <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+        </svg>
+        Tecnologia a serviço do planeta
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/pesquisa.js?v=20260804-3"></script>
+  <script src="assets/js/app.js?v=20260804-2"></script>
+  <script src="assets/js/perfil-menu.js"></script>
+
+  </body>
+</html>

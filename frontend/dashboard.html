@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Meu Painel | E-Lixo Consciente</title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/style.css"
+  >
+</head>
+
+<body class="dashboard-page">
+
+  <header class="dashboard-header">
+
+    <div class="container dashboard-header__inner">
+
+      <a
+        href="index.html"
+        class="logo"
+      >
+
+        <div class="logo__icon">
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"
+            />
+
+            <path
+              d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"
+            />
+          </svg>
+
+        </div>
+
+        <span class="logo__text">
+          E-Lixo <span>Consciente</span>
+        </span>
+
+      </a>
+
+      <div class="dashboard-header__actions">
+
+        <a
+          href="index.html"
+          class="btn btn--primary"
+          style="
+            min-height: 44px;
+            padding: 10px 22px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            text-decoration: none;
+          "
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="15"
+            height="15"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 11l9-8 9 8"/>
+            <path d="M5 10v10h14V10"/>
+          </svg>
+
+          Página inicial
+        </a>
+
+        <div class="profile-menu">
+          <button type="button" class="header-profile-avatar profile-menu__trigger" aria-label="Abrir menu do perfil" aria-haspopup="true" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+          </button>
+          <div class="profile-menu__dropdown" role="menu">
+            <a href="perfil.html" role="menuitem">Meu perfil</a>
+            <button type="button" class="profile-menu__logout" role="menuitem">Sair</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <main>
+
+    <section class="dashboard-hero">
+
+      <div
+        class="
+          dashboard-hero__decor
+          dashboard-hero__decor--1
+        "
+      ></div>
+
+      <div
+        class="
+          dashboard-hero__decor
+          dashboard-hero__decor--2
+        "
+      ></div>
+
+      <div class="container dashboard-hero__content">
+
+        <div>
+
+          <span class="dashboard-label">
+            Área do colaborador
+          </span>
+
+          <h1>
+            Olá,
+            <span id="nomeUsuario">
+              Usuário
+            </span>
+          </h1>
+
+          <p>
+            Acompanhe os pontos enviados para análise e ajude outras
+            pessoas a encontrarem locais corretos para descarte de
+            resíduos eletrônicos.
+          </p>
+
+        </div>
+
+        <a
+          href="cadastro-ponto.html"
+          class="btn btn--white dashboard-new-point"
+        >
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="17"
+            height="17"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <line
+              x1="12"
+              y1="5"
+              x2="12"
+              y2="19"
+            />
+
+            <line
+              x1="5"
+              y1="12"
+              x2="19"
+              y2="12"
+            />
+          </svg>
+
+          Sugerir novo ponto
+
+        </a>
+
+      </div>
+
+    </section>
+
+    <section class="dashboard-content">
+
+      <div class="container">
+
+        <div class="dashboard-stats">
+
+          <article class="dashboard-stat-card">
+
+            <div
+              class="
+                dashboard-stat-card__icon
+                dashboard-stat-card__icon--blue
+              "
+            >
+              01
+            </div>
+
+            <div>
+
+              <span>
+                Total enviado
+              </span>
+
+              <strong id="totalEnviados">
+                0
+              </strong>
+
+            </div>
+
+          </article>
+
+          <article class="dashboard-stat-card">
+
+            <div
+              class="
+                dashboard-stat-card__icon
+                dashboard-stat-card__icon--yellow
+              "
+            >
+              02
+            </div>
+
+            <div>
+
+              <span>
+                Em análise
+              </span>
+
+              <strong id="totalPendentes">
+                0
+              </strong>
+
+            </div>
+
+          </article>
+
+          <article class="dashboard-stat-card">
+
+            <div
+              class="
+                dashboard-stat-card__icon
+                dashboard-stat-card__icon--green
+              "
+            >
+              03
+            </div>
+
+            <div>
+
+              <span>
+                Aprovados
+              </span>
+
+              <strong id="totalAprovados">
+                0
+              </strong>
+
+            </div>
+
+          </article>
+
+          <article class="dashboard-stat-card">
+
+            <div
+              class="
+                dashboard-stat-card__icon
+                dashboard-stat-card__icon--red
+              "
+            >
+              04
+            </div>
+
+            <div>
+
+              <span>
+                Rejeitados
+              </span>
+
+              <strong id="totalRejeitados">
+                0
+              </strong>
+
+            </div>
+
+          </article>
+
+        </div>
+
+        <div class="dashboard-section-header">
+
+          <div>
+
+            <span class="label">
+              Acompanhamento
+            </span>
+
+            <h2>
+              Meus pontos sugeridos
+            </h2>
+
+          </div>
+
+          <button
+            type="button"
+            id="btnAtualizar"
+            class="btn btn--outline-green"
+          >
+            Atualizar
+          </button>
+
+        </div>
+
+        <div
+          id="dashboardMensagem"
+          class="form-message"
+        ></div>
+
+        <div
+          id="meusPontosContainer"
+          class="dashboard-points-grid"
+        >
+
+          <div class="dashboard-loading">
+            Carregando seus pontos...
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <div
+    id="modalSolicitarExclusao"
+    class="profile-delete-modal"
+    aria-hidden="true"
+  >
+    <div
+      class="profile-delete-modal__overlay"
+      data-fechar-exclusao
+    ></div>
+
+    <div
+      class="profile-delete-modal__content"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tituloSolicitarExclusao"
+    >
+      <button
+        type="button"
+        id="btnFecharSolicitarExclusao"
+        class="profile-delete-modal__close"
+        aria-label="Fechar"
+      >
+        x
+      </button>
+
+      <span class="label">
+        Solicitação
+      </span>
+
+      <h2 id="tituloSolicitarExclusao">
+        Solicitar exclusão do ponto
+      </h2>
+
+      <p>
+        Informe o motivo da exclusão. A solicitação será analisada por um administrador.
+      </p>
+
+      <div class="form-group">
+        <label for="motivoExclusao">
+          Motivo da exclusão *
+        </label>
+
+        <textarea
+          id="motivoExclusao"
+          rows="5"
+          maxlength="1000"
+          placeholder="Ex.: O ponto não realiza mais coleta nesse endereço."
+        ></textarea>
+      </div>
+
+      <div
+        id="mensagemSolicitarExclusao"
+        class="form-message"
+      ></div>
+
+      <div class="profile-delete-modal__actions">
+        <button
+          type="button"
+          id="btnCancelarSolicitarExclusao"
+          class="btn header-login-btn"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          id="btnConfirmarSolicitarExclusao"
+          class="btn dashboard-btn-delete"
+        >
+          Enviar solicitação
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+  <script src="assets/js/perfil-menu.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+/* Timeline */
+
+.dashboard-timeline {
+
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+
+    gap: 0;
+
+    padding-top: 22px;
+
+    border-top: 1px solid #e4ece8;
+
+}
+
+.dashboard-timeline__item{
+
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns: 18px 1fr;
+
+    gap: 12px;
+
+    padding-right: 24px;
+
+}
+
+.dashboard-timeline__item::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:8px;
+    left:18px;
+    right:0;
+
+    height:2px;
+
+    background:#dce6e1;
+
+}
+
+.dashboard-timeline__item:last-child::after{
+
+    display:none;
+
+}
+
+.dashboard-timeline__item>span{
+
+    position:relative;
+
+    z-index:2;
+
+    width:17px;
+    height:17px;
+
+    border-radius:50%;
+
+    border:3px solid #cedbd5;
+
+    background:white;
+
+}
+
+.dashboard-timeline__item strong{
+
+    display:block;
+
+    margin-bottom:4px;
+
+    font-size:.88rem;
+
+    color:#39584d;
+
+}
+
+.dashboard-timeline__item small{
+
+    display:block;
+
+    color:#879790;
+
+    line-height:1.45;
+
+    font-size:.82rem;
+
+}
+
+/* Status */
+
+.dashboard-timeline__item.is-complete>span,
+.dashboard-timeline__item.is-approved>span{
+
+    border-color:#16915a;
+
+    background:#16915a;
+
+}
+
+.dashboard-timeline__item.is-complete::after{
+
+    background:#16915a;
+
+}
+
+.dashboard-timeline__item.is-current>span{
+
+    border-color:#e2a000;
+
+    background:#fff1b8;
+
+}
+
+.dashboard-timeline__item.is-rejected>span{
+
+    border-color:#d1453a;
+
+    background:#d1453a;
+
+}
+
+/* Responsivo */
+
+@media(max-width:768px){
+
+.dashboard-timeline{
+
+grid-template-columns:1fr;
+
+gap:24px;
+
+}
+
+.dashboard-timeline__item::after{
+
+display:none;
+
+}
+
+}

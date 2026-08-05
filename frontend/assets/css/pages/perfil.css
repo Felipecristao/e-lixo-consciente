@@ -1,0 +1,137 @@
+/* Pagina de perfil */
+
+.profile-page {
+    min-height: 100vh;
+    background: #f4f8f6;
+}
+
+.profile-hero {
+    padding: 58px 0 92px;
+
+    color: var(--white);
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(255, 255, 255, 0.08),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            var(--green-dark) 0%,
+            var(--green) 45%,
+            var(--green-mid) 100%
+        );
+}
+
+.profile-hero h1 {
+    margin: 10px 0 12px;
+
+    color: var(--white);
+
+    font-size: clamp(2.1rem, 5vw, 3.6rem);
+    line-height: 1.1;
+}
+
+.profile-hero p {
+    max-width: 720px;
+
+    color: var(--green-soft-text);
+    line-height: 1.8;
+}
+
+.profile-content {
+    padding: 0 0 90px;
+}
+
+.profile-content .container {
+    position: relative;
+    z-index: 2;
+
+    margin-top: -54px;
+}
+
+.profile-card {
+    display: grid;
+    gap: 20px;
+
+    padding: 38px;
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+    border-radius: 28px;
+
+    box-shadow: 0 22px 60px rgba(9, 55, 38, 0.1);
+}
+
+.profile-password-card {
+    margin-top: 24px;
+}
+
+.profile-card__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.profile-card__header h2 {
+    margin: 8px 0 0;
+
+    color: var(--foreground);
+
+    font-size: 1.7rem;
+}
+
+.profile-card__note {
+    color: var(--muted-text);
+
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.profile-divider {
+    height: 1px;
+
+    margin: 6px 0;
+
+    background: #e2ebe6;
+}
+
+.profile-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+
+    margin-top: 10px;
+    padding-top: 24px;
+
+    border-top: 1px solid #e2ebe6;
+}
+
+.profile-actions .btn {
+    min-height: 48px;
+    padding: 12px 24px;
+}
+
+@media (max-width: 680px) {
+    .profile-card {
+        padding: 26px 20px;
+    }
+
+    .profile-card__header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .profile-actions {
+        align-items: stretch;
+        flex-direction: column-reverse;
+    }
+
+    .profile-actions .btn {
+        width: 100%;
+    }
+}

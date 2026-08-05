@@ -1,0 +1,246 @@
+/* Login e cadastro */
+
+.auth-page {
+    min-height: 100vh;
+    background: #f4f8f6;
+}
+
+/* Layout */
+
+.auth-layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+}
+
+/* Lado esquerdo */
+
+.auth-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 48px 7vw;
+
+    color: var(--white);
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(255, 255, 255, 0.08),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            var(--green-dark) 0%,
+            var(--green) 45%,
+            var(--green-mid) 100%
+        );
+}
+
+.auth-brand .logo__text {
+    color: var(--white);
+}
+
+.auth-brand .logo__text span {
+    color: var(--white);
+}
+
+.auth-brand__content {
+    max-width: 620px;
+    margin: auto 0;
+}
+
+.auth-brand__content .label {
+    color: var(--green-soft-text);
+}
+
+.auth-brand__content h1 {
+    margin: 16px 0;
+
+    color: var(--white);
+
+    font-size: clamp(2.3rem, 5vw, 4.5rem);
+    line-height: 1.05;
+}
+
+.auth-brand__content p {
+    max-width: 540px;
+
+    color: var(--green-soft-text);
+
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+/* Benefícios */
+
+.auth-benefits {
+    display: grid;
+    gap: 18px;
+
+    margin-top: 40px;
+}
+
+.auth-benefit {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    gap: 14px;
+}
+
+.auth-benefit > span {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--green-accent);
+    background: rgba(255, 255, 255, 0.06);
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.auth-benefit strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--white);
+}
+
+.auth-benefit p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.72);
+
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+/* Card */
+
+.auth-card {
+    width: min(460px, calc(100% - 40px));
+
+    margin: auto;
+    padding: 42px;
+
+    background: var(--white);
+
+    border: 1px solid #dfe9e4;
+    border-radius: 28px;
+
+    box-shadow: 0 24px 70px rgba(10, 52, 37, 0.12);
+}
+
+.auth-card--register {
+    width: min(560px, calc(100% - 40px));
+}
+
+.auth-card__header h2 {
+    margin: 10px 0 8px;
+
+    color: var(--foreground);
+
+    font-size: 2rem;
+}
+
+.auth-card__header p {
+    margin-bottom: 30px;
+
+    color: var(--muted-text);
+}
+
+/* Links */
+
+.auth-footer-text {
+    margin-top: 24px;
+
+    text-align: center;
+
+    color: #66786f;
+}
+
+.auth-footer-text a,
+.auth-back {
+    color: var(--green);
+    font-weight: 700;
+}
+
+.auth-back {
+    width: 100%;
+
+    margin-top: 16px;
+    padding: 13px 20px;
+
+    text-align: center;
+}
+
+.auth-inline-link {
+    justify-self: end;
+
+    color: var(--green);
+
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.auth-reset-box {
+    padding: 16px;
+
+    background: var(--green-light);
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.auth-reset-box strong {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--green-dark);
+}
+
+.auth-reset-box p {
+    margin: 0 0 8px;
+
+    color: var(--muted-text);
+
+    line-height: 1.5;
+}
+
+.auth-reset-box a {
+    color: var(--green);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+/* Responsivo */
+
+@media (max-width: 850px) {
+    .auth-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-brand {
+        min-height: 320px;
+        padding: 32px 24px;
+    }
+
+    .auth-card {
+        margin: 32px auto;
+        padding: 30px 24px;
+    }
+}
+
+@media (max-width: 650px) {
+    .auth-benefits {
+        display: none;
+    }
+}
