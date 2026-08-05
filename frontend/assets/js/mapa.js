@@ -1114,7 +1114,7 @@ function normalizarTermosEndereco(valor) {
         .filter((termo) => termo && !palavrasIgnoradas.has(termo));
 }
 
-function selecionarLocalizacaoMapa(localizacao, zoom = 14) {
+function selecionarLocalizacaoMapa(localizacao, zoom = 14, centralizarPagina = false) {
     ocultarResultadosLocalizacao();
 
     pontosPublicos.forEach((ponto) => {
@@ -1135,13 +1135,24 @@ function selecionarLocalizacaoMapa(localizacao, zoom = 14) {
         { radius: 9, color: "#087f5b", weight: 3, fillColor: "#ffffff", fillOpacity: 1 }
     ).addTo(mapa).bindPopup(`<strong>Local pesquisado</strong><br>${escaparHTML(localizacao.titulo)}<br>${escaparHTML(localizacao.detalhes)}`);
 
-    mapa.flyTo(
+    mapa.setView(
         [localizacao.latitude, localizacao.longitude],
         zoom,
-        { animate: true, duration: 0.7 }
+        { animate: false }
     );
     marcadorLocalizacaoBusca.openPopup();
     exibirMensagemMapa(`Pontos ordenados pela distância de ${localizacao.titulo}, ${localizacao.cidade}.`, "sucesso");
+
+    if (centralizarPagina) {
+        const elementoMapa = document.getElementById("map");
+
+        elementoMapa?.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        window.setTimeout(() => mapa.invalidateSize({ pan: false }), 350);
+    }
 }
 
 function calcularDistanciaKm(lat1, lon1, lat2, lon2) {
@@ -1228,7 +1239,7 @@ function localizarUsuario(botao) {
                     localizacao.enderecoPesquisa;
             }
 
-            selecionarLocalizacaoMapa(localizacao, 16);
+            selecionarLocalizacaoMapa(localizacao, 16, true);
 
             botao.disabled = false;
             botao.textContent =
