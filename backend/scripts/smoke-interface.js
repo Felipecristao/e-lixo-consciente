@@ -90,8 +90,14 @@ async function executar() {
         await pagina.goto(`${site}/como-funciona`, { waitUntil: "domcontentloaded" });
         await pagina.waitForSelector(".profile-menu__trigger");
         conferir(await pagina.getByText("Meus pontos de coleta", { exact: true }).count(), "Sessão não foi mantida em Como Funciona");
+        const alturaHeroComoFunciona = await pagina.locator(".how-page-hero").evaluate((elemento) => elemento.getBoundingClientRect().height);
 
         await pagina.goto(`${site}/sobre`, { waitUntil: "domcontentloaded" });
+        const alturaHeroSobre = await pagina.locator(".about-hero").evaluate((elemento) => elemento.getBoundingClientRect().height);
+        conferir(
+            Math.abs(alturaHeroSobre - alturaHeroComoFunciona) <= 40,
+            "Área verde da página Sobre ficou desproporcional à página Como Funciona"
+        );
         const colunaTituloSobre = await pagina.locator(".about-social__heading").boundingBox();
         const colunaTextoSobre = await pagina.locator(".about-social__content").boundingBox();
         conferir(
