@@ -809,3 +809,15 @@
 
     text-decoration: none;
 }
+
+@media (max-width: 420px) {
+    .dashboard-header__actions {
+        gap: 8px;
+    }
+
+    .dashboard-header__actions .btn {
+        min-height: 42px;
+        padding: 9px 14px;
+        font-size: 0.82rem;
+    }
+}

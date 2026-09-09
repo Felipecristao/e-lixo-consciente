@@ -445,6 +445,20 @@
     }
 }
 
+/*
+ * Usuario logado (admin ou comum): o header injeta um botao-pilula
+ * ("Painel administrador" / "Meus pontos de coleta") logo antes do
+ * avatar de perfil. No mobile esse texto longo nao cabe ao lado do
+ * avatar e do botao de menu, e estoura a largura da tela. O mesmo
+ * link ja existe dentro do menu mobile (#mobile-menu), entao no
+ * mobile escondemos so essa pilula e mantemos avatar + menu.
+ */
+@media (max-width: 768px) {
+    .header__actions > a.btn:has(+ .profile-menu) {
+        display: none;
+    }
+}
+
 /* Botões do menu mobile */
 
 .header-mobile-login,
