@@ -36,6 +36,11 @@ services:
       JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
       CORS_ORIGIN: https://${DOMAIN:?Defina DOMAIN}
+      EMAIL_HOST: ${EMAIL_HOST:-}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_USER: ${EMAIL_USER:-}
+      EMAIL_PASS: ${EMAIL_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
     depends_on:
       database:
         condition: service_healthy

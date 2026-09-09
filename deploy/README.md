@@ -7,6 +7,7 @@
 3. Clone o repositório na VPS.
 4. Copie `.env.production.example` para `.env.production` e substitua todos os valores.
 5. Libere somente SSH, HTTP e HTTPS no firewall. O MariaDB não precisa de porta pública.
+6. Preencha `EMAIL_HOST`, `EMAIL_USER` e `EMAIL_PASS` em `.env.production` para o "esqueci minha senha" enviar o link de verdade aos usuários. Com Gmail: ative a verificação em duas etapas na conta e gere uma "senha de app" em https://myaccount.google.com/apppasswords — use essa senha em `EMAIL_PASS`, nunca a senha normal da conta. Sem essas variáveis preenchidas, o token é gerado mas nenhum e-mail é enviado.
 
 ## Primeira inicialização
 

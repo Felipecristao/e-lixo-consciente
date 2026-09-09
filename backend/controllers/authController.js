@@ -3,6 +3,7 @@ const crypto = require("crypto");
 
 const usuarioModel = require("../models/usuarioModel");
 const gerarToken = require("../utils/jwt");
+const mailer = require("../utils/mailer");
 
 module.exports = {
 
@@ -403,6 +404,35 @@ module.exports = {
                 formatarDataMariaDB(expiraEm)
             );
 
+            const link =
+                `${obterUrlBase(req)}/redefinir-senha?token=${token}`;
+
+            if (mailer.emailConfigurado()) {
+
+                try {
+
+                    await mailer.enviarEmailRecuperacaoSenha({
+                        para: usuario.email,
+                        nome: usuario.nome,
+                        link
+                    });
+
+                } catch (erroEmail) {
+
+                    console.error(
+                        "Falha ao enviar e-mail de recuperacao:",
+                        erroEmail
+                    );
+
+                }
+
+                return res.json({
+                    mensagem:
+                        "Se o e-mail estiver cadastrado, um link de recuperação foi enviado."
+                });
+
+            }
+
             if (process.env.NODE_ENV === "production") {
                 return res.json({
                     mensagem:
@@ -412,8 +442,9 @@ module.exports = {
 
             return res.json({
                 mensagem:
-                    "Token de recuperação gerado. Em produção, esse link seria enviado por e-mail.",
-                link: `redefinir-senha.html?token=${token}`,
+                    "Envio de e-mail nao configurado (EMAIL_HOST/EMAIL_USER/EMAIL_PASS). " +
+                    "Use o link abaixo apenas para teste local.",
+                link,
                 token
             });
 
@@ -540,6 +571,14 @@ function normalizarEmail(valor) {
 
 function emailValido(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function obterUrlBase(req) {
+    if (process.env.FRONTEND_URL) {
+        return process.env.FRONTEND_URL.replace(/\/+$/, "");
+    }
+
+    return `${req.protocol}://${req.get("host")}`;
 }
 
 function gerarHashToken(token) {
