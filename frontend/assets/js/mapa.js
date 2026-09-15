@@ -9,6 +9,7 @@ let buscaLocalizacaoController = null;
 
 let pontosPublicos = [];
 let pontosVisiveis = [];
+let versaoCarregamentoPontos = 0;
 
 const marcadoresPorId = new Map();
 
@@ -98,6 +99,9 @@ async function carregarPontosMapa() {
             "mapPointsList"
         );
 
+    const versaoAtual =
+        ++versaoCarregamentoPontos;
+
     if (lista) {
         lista.innerHTML = `
             <div class="map-loading">
@@ -125,7 +129,7 @@ async function carregarPontosMapa() {
                     ) === "APROVADO"
             );
 
-        await prepararCoordenadas(
+        preencherCoordenadasDoCache(
             pontosPublicos
         );
 
@@ -133,12 +137,27 @@ async function carregarPontosMapa() {
             ...pontosPublicos
         ];
 
+        const haEnderecosPendentes =
+            pontosPublicos.some((ponto) =>
+                !possuiCoordenadas(ponto) &&
+                Boolean(montarEnderecoGeocodificacao(ponto))
+            );
+
         renderizarMapa(
-            pontosVisiveis
+            pontosVisiveis,
+            {
+                coordenadasEmCarregamento:
+                    haEnderecosPendentes
+            }
         );
 
         await aplicarBuscaInicialMapa();
         focarPontoSelecionado();
+
+        void prepararCoordenadasEmSegundoPlano(
+            pontosPublicos,
+            versaoAtual
+        );
     } catch (erro) {
         console.error(
             "Erro ao carregar o mapa:",
@@ -167,6 +186,68 @@ async function carregarPontosMapa() {
 }
 
 /* Coordenadas e geocodificação */
+
+function preencherCoordenadasDoCache(
+    pontos
+) {
+    pontos.forEach((ponto) => {
+        if (possuiCoordenadas(ponto)) {
+            return;
+        }
+
+        const coordenadasSalvas =
+            obterCoordenadasCache(ponto);
+
+        if (!coordenadasSalvas) {
+            return;
+        }
+
+        ponto.latitude =
+            coordenadasSalvas.latitude;
+
+        ponto.longitude =
+            coordenadasSalvas.longitude;
+    });
+}
+
+async function prepararCoordenadasEmSegundoPlano(
+    pontos,
+    versaoCarregamento
+) {
+    const haviaCoordenadas =
+        pontos.some(possuiCoordenadas);
+
+    const haEnderecosPendentes =
+        pontos.some((ponto) =>
+            !possuiCoordenadas(ponto) &&
+            Boolean(montarEnderecoGeocodificacao(ponto))
+        );
+
+    if (!haEnderecosPendentes) {
+        return;
+    }
+
+    try {
+        await prepararCoordenadas(pontos);
+    } finally {
+        if (
+            versaoCarregamento !==
+            versaoCarregamentoPontos
+        ) {
+            return;
+        }
+
+        renderizarMapa(
+            pontosVisiveis,
+            {
+                manterVisualizacao:
+                    haviaCoordenadas
+            }
+        );
+
+        focarPontoSelecionado();
+    }
+}
 
 async function prepararCoordenadas(
     pontos
@@ -407,7 +488,10 @@ function aguardar(milissegundos) {
 
 /* Renderização */
 
-function renderizarMapa(pontos) {
+function renderizarMapa(
+    pontos,
+    opcoes = {}
+) {
     limparMarcadores();
     renderizarListaPontos(pontos);
     atualizarTotalPontos(
@@ -427,13 +511,16 @@ function renderizarMapa(pontos) {
         }
     );
 
-    ajustarVisualizacaoMapa(
-        pontosComCoordenadas
-    );
+    if (!opcoes.manterVisualizacao) {
+        ajustarVisualizacaoMapa(
+            pontosComCoordenadas
+        );
+    }
 
     if (
         pontos.length > 0 &&
-        pontosComCoordenadas.length === 0
+        pontosComCoordenadas.length === 0 &&
+        !opcoes.coordenadasEmCarregamento
     ) {
         exibirMensagemMapa(
             "Os pontos foram encontrados, mas os endereços ainda não possuem coordenadas válidas.",
