@@ -57,15 +57,6 @@ function inicializarMapa() {
         centroInicial.zoom
     );
 
-    const camadaBasePrincipal = L.tileLayer(
-        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            maxZoom: 19,
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }
-    );
-
     const camadaBaseAlternativa = L.tileLayer(
         "https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
         {
@@ -75,27 +66,21 @@ function inicializarMapa() {
         }
     );
 
-    let usandoCamadaAlternativa = false;
+    if (typeof L.maplibreGL === "function") {
+        L.maplibreGL({
+            style: "https://tiles.openfreemap.org/styles/liberty"
+        }).addTo(mapa);
 
-    camadaBasePrincipal.on("tileerror", () => {
-        if (usandoCamadaAlternativa || !mapa) {
-            return;
-        }
-
-        usandoCamadaAlternativa = true;
-
-        if (mapa.hasLayer(camadaBasePrincipal)) {
-            mapa.removeLayer(camadaBasePrincipal);
-        }
-
+        mapa.attributionControl.addAttribution(
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors · OpenFreeMap'
+        );
+    } else {
         camadaBaseAlternativa.addTo(mapa);
 
         console.warn(
-            "O provedor principal do mapa falhou. A camada alternativa foi carregada."
+            "A camada principal do mapa não carregou. A camada alternativa foi exibida."
         );
-    });
-
-    camadaBasePrincipal.addTo(mapa);
+    }
 
     camadaMarcadores =
         L.layerGroup().addTo(mapa);
